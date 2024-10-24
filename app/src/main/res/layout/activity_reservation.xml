@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ReservationActivity">
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="729dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:background="@color/background"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/movieNAme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Titanic"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/movieType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20px"
+            android:layout_marginBottom="2px"
+            android:color="@color/gray"
+            android:text="Romance"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/screen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="90px"
+            android:text="Screen"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"></LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/seatContainer"
+            android:layout_width="match_parent"
+            android:layout_height="308dp"
+            android:layout_marginLeft="35px"
+            android:layout_marginTop="200px"
+            android:layout_marginRight="35px"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/A1"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:background="@drawable/couch"
+                android:backgroundTint="@color/orange"
+                app:srcCompat="@drawable/couch" />
+
+            <ImageButton
+                android:id="@+id/A2"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:layout_marginRight="60px"
+                android:background="@drawable/couch"
+                android:backgroundTint="@color/orange"
+                app:srcCompat="@drawable/couch" />
+
+            <ImageButton
+                android:id="@+id/A3"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:background="@drawable/couch"
+                android:backgroundTint="@color/orange"
+                app:srcCompat="@drawable/couch" />
+
+            <ImageButton
+                android:id="@+id/A4"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:background="@drawable/couch"
+                android:backgroundTint="@color/orange"
+                app:srcCompat="@drawable/couch" />
+
+            <ImageButton
+                android:id="@+id/A5"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:background="@drawable/couch"
+                android:backgroundTint="@color/orange"
+                app:srcCompat="@drawable/couch" />
+
+            <ImageButton
+                android:id="@+id/A6"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:background="@drawable/couch"
+                android:backgroundTint="@color/orange"
+                app:srcCompat="@drawable/couch" />
+
+            <ImageButton
+                android:id="@+id/A7"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:background="@drawable/couch"
+                android:backgroundTint="@color/orange"
+                app:srcCompat="@drawable/couch" />
+
+            <ImageButton
+                android:id="@+id/A8"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:background="@drawable/couch"
+                android:backgroundTint="@color/orange"
+                app:srcCompat="@drawable/couch" />
+
+            <ImageButton
+                android:id="@+id/A9"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:background="@drawable/couch"
+                android:backgroundTint="@color/orange"
+                app:srcCompat="@drawable/couch" />
+
+            <ImageButton
+                android:id="@+id/A10"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:layout_marginLeft="60px"
+                android:background="@drawable/couch"
+                android:backgroundTint="@color/orange"
+                app:srcCompat="@drawable/couch" />
+
+            <ImageButton
+                android:id="@+id/A11"
+                android:layout_width="80px"
+                android:layout_height="80px"
+
+                android:background="@drawable/couch"
+                android:backgroundTint="@color/orange"
+                app:srcCompat="@drawable/couch" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bookButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/orange"
+            android:shadowColor="@color/gray"
+            android:text="Book"
+            android:textSize="20sp"
+            app:rippleColor="@color/orange" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
