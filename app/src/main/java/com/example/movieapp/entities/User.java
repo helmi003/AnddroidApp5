@@ -1,12 +1,14 @@
 package com.example.movieapp.entities;
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName="user")
 public class User {
-    @PrimaryKey(autoGenerate = true)
-    public int id;
+    @PrimaryKey()
+    @NonNull
+    public String id;
     @ColumnInfo()
     public String username;
     @ColumnInfo()
@@ -17,21 +19,28 @@ public class User {
     public Role role = Role.USER;
     @ColumnInfo()
     public String password;
+    @ColumnInfo(name = "is_blocked")
+    public boolean isBlocked = false;
+    @ColumnInfo(name = "is_verified")
+    public boolean isVerified = false;
 
-    public User(int id, String username, Long phone, String email, Role role, String password) {
+    public User(@NonNull String id, String username, Long phone, String email, Role role, String password, boolean isBlocked, boolean isVerified) {
         this.id = id;
         this.username = username;
         this.phone = phone;
         this.email = email;
         this.role = role;
         this.password = password;
+        this.isBlocked = isBlocked;
+        this.isVerified = isVerified;
     }
 
-    public int getId() {
+    @NonNull
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -75,15 +84,33 @@ public class User {
         this.password = password;
     }
 
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", phone=" + phone +
                 ", email='" + email + '\'' +
                 ", role=" + role +
                 ", password='" + password + '\'' +
+                ", isBlocked=" + isBlocked +
+                ", isVerified=" + isVerified +
                 '}';
     }
 }

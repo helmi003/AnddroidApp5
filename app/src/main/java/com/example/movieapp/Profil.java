@@ -2,16 +2,10 @@ package com.example.movieapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.example.movieapp.database.ApplicationDatabase;
 import com.example.movieapp.entities.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,49 +16,38 @@ public class Profil extends AppCompatActivity {
     TextView email;
     TextView username;
     TextView phone;
-    Button logout;
     FirebaseUser currentUser;
     FirebaseAuth auth;
     User user;
+    ImageView backArrow;
     private ApplicationDatabase database;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if (auth != null) {
-            currentUser = auth.getCurrentUser();
-            if (currentUser == null) {
-                Intent intent = new Intent(Profil.this, Login.class);
-                startActivity(intent);
-            } else {
-                user = database.userDAO().getUserByEmail(currentUser.getEmail());
-                username.setText(user.getUsername());
-                phone.setText(user.getPhone().toString());
-                email.setText(user.getEmail());
-            }
-        }else{
-            Intent intent = new Intent(Profil.this, Login.class);
-            startActivity(intent);
-        }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
+
+        // Initialize FirebaseAuth and Database
         auth = FirebaseAuth.getInstance();
         database = ApplicationDatabase.getAppDatabase(this);
+        currentUser = auth.getCurrentUser();
 
+        // Initialize views
         email = findViewById(R.id.email);
         username = findViewById(R.id.username);
         phone = findViewById(R.id.phone);
-        logout = findViewById(R.id.logout);
+        backArrow = findViewById(R.id.backArrow);
 
-        logout.setOnClickListener(view -> {
-            auth.getInstance().signOut();
-            Intent intent = new Intent(Profil.this,Login.class);
-            startActivity(intent);
+        // Load user data
+        if (currentUser != null) {
+            user = database.userDAO().getUserById(currentUser.getUid());
+            username.setText(user.getUsername());
+            phone.setText(user.getPhone().toString());
+            email.setText(user.getEmail());
+        }
+
+        backArrow.setOnClickListener(v -> {
+            finish();
         });
-
     }
 }

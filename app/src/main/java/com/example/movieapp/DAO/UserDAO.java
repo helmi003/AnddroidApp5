@@ -20,8 +20,12 @@ public interface UserDAO {
     void updateUser(User user);
     @Query("SELECT * FROM user")
     List<User> getAllUsers();
-    @Query("SELECT * FROM user where id = :id")
-    User getUserById(int id);
-    @Query("SELECT * FROM user where email = :email")
+    @Query("SELECT * FROM user WHERE id = :id LIMIT 1")
+    User getUserById(String id);
+
+    @Query("SELECT * FROM user WHERE email = :email LIMIT 1")
     User getUserByEmail(String email);
+
+    @Query("UPDATE user SET is_blocked = :isBlocked WHERE id = :id")
+    void toggleBlockUser(String id, boolean isBlocked);
 }

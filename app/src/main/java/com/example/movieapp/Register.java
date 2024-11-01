@@ -108,10 +108,12 @@ public class Register extends AppCompatActivity {
         register.setOnClickListener(view -> {
             String emailText = email.getText().toString().trim();
             String passwordText = password.getText().toString().trim();
+            String phoneText = phone.getText().toString().trim();
+            String usernameText = username.getText().toString().trim();
             String confirmPasswordText = confirmPassword.getText().toString().trim();
 
-            if (emailText.isEmpty() || passwordText.isEmpty()) {
-                Toast.makeText(Register.this, "Email and Password cannot be empty.", Toast.LENGTH_SHORT).show();
+            if (emailText.isEmpty() || passwordText.isEmpty() || phoneText.isEmpty() || usernameText.isEmpty()) {
+                Toast.makeText(Register.this, "All fields are required", Toast.LENGTH_SHORT).show();
                 return;
             }else if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
                 Toast.makeText(Register.this, "That is not a correct email", Toast.LENGTH_SHORT).show();
@@ -131,9 +133,22 @@ public class Register extends AppCompatActivity {
                             register.setEnabled(true);
                             register.setText("Register");
                             if (task.isSuccessful()) {
-                                database.userDAO().createUser(new User(0,username.getText().toString(),Long.parseLong(phone.getText().toString()),emailText, Role.USER,passwordText));
+                                FirebaseUser user = task.getResult().getUser();
+                                String userId = user.getUid();
+                                database.userDAO().createUser(new User(userId,usernameText,Long.parseLong(phoneText),emailText, Role.USER,passwordText,false,false));
                                 Toast.makeText(Register.this, "Authentication success.",
                                         Toast.LENGTH_SHORT).show();
+                                user.sendEmailVerification()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(Register.this, "Verification email sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(Register.this, "Failed to send verification email.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
                                 Intent intent = new Intent(Register.this, Login.class);
                                 startActivity(intent);
                             } else {

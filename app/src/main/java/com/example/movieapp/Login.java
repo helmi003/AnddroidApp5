@@ -23,6 +23,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.movieapp.database.ApplicationDatabase;
+import com.example.movieapp.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -40,8 +42,6 @@ public class Login extends AppCompatActivity {
     Button login;
     FirebaseAuth auth;
     ProgressBar buttonProgress;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,10 +108,17 @@ public class Login extends AppCompatActivity {
                             login.setEnabled(true);
                             login.setText("Login");
                             if (task.isSuccessful()) {
-                                Toast.makeText(Login.this, "Authentication success.",
-                                        Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(Login.this, Profil.class);
-                                startActivity(intent);
+                                FirebaseUser user2 = task.getResult().getUser();
+                                boolean check = user2.isEmailVerified();
+                                if(check){
+                                    Toast.makeText(Login.this, "Authentication success.",
+                                            Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(Login.this, MainActivity.class);
+                                    startActivity(intent);
+                                }else{
+                                    Toast.makeText(Login.this, "You must verify your email first.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                             } else {
                                 Toast.makeText(Login.this, "There are no credentials with the provided information",
                                         Toast.LENGTH_SHORT).show();

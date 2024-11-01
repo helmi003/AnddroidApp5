@@ -13,6 +13,12 @@
         android:theme="@style/Theme.MovieApp"
         tools:targetApi="31">
         <activity
+            android:name=".userList"
+            android:exported="false" />
+        <activity
+            android:name=".admin_resertvations"
+            android:exported="false" />
+        <activity
             android:name=".Login"
             android:exported="false" />
         <activity
@@ -22,17 +28,24 @@
             android:name=".Register"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Profil"
             android:exported="false" />
         <activity
-            android:name=".Profil"
-            android:exported="true">
+            android:name=".SeatReservationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SplashScreen"
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
