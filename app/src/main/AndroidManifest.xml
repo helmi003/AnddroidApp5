@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +15,35 @@
         android:theme="@style/Theme.MovieApp"
         tools:targetApi="31">
         <activity
-            android:name=".userList"
+            android:name=".AddEpisode"
+            android:exported="false" />
+        <activity
+            android:name=".Episodes"
+            android:exported="false" />
+        <activity
+            android:name=".AddSeason"
+            android:exported="false" />
+        <activity
+            android:name=".SeasonItemView"
+            android:exported="false" />
+        <activity
+            android:name=".Seasons"
+            android:exported="false" />
+        <activity
+            android:name=".Series"
+            android:exported="false" />
+        <activity
+            android:name=".AddSerie"
+            android:exported="false" />
+        <activity
+            android:name=".FullScreenVideo"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false" />
+        <activity
+            android:name=".Streaming"
+            android:exported="false" />
+        <activity
+            android:name=".Users"
             android:exported="false" />
         <activity
             android:name=".admin_resertvations"

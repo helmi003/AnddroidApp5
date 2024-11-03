@@ -38,10 +38,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this,Profil.class);
                 startActivity(intent);
             } else if (id == R.id.nav_users) {
-                Intent intent = new Intent(MainActivity.this,userList.class);
+                Intent intent = new Intent(MainActivity.this, Users.class);
                 startActivity(intent);
             } else if (id == R.id.nav_reservation) {
-                Intent intent = new Intent(MainActivity.this,admin_resertvations.class);
+                Intent intent = new Intent(MainActivity.this, admin_resertvations.class);
+                startActivity(intent);
+            } else if (id == R.id.nav_streaming) {
+                Intent intent = new Intent(MainActivity.this,Streaming.class);
+                startActivity(intent);
+            }else if (id == R.id.nav_series) {
+                Intent intent = new Intent(MainActivity.this, Series.class);
                 startActivity(intent);
             } else if (id == R.id.nav_logout) {
                 auth.getInstance().signOut();

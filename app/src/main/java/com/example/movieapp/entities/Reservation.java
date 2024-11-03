@@ -5,6 +5,7 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity(tableName = "reservation",
@@ -14,7 +15,7 @@ import java.util.List;
                 childColumns = "userId",
                 onDelete = ForeignKey.CASCADE
         ))
-public class Reservation {
+public class Reservation implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int code;
