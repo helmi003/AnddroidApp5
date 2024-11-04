@@ -18,7 +18,7 @@
             android:icon="@drawable/baseline_groups_24"
             android:title="Users" />
         <item
-            android:id="@+id/nav_reservation"
+            android:id="@+id/nav_reservations"
             android:icon="@drawable/couch"
             android:title="Reservations" />
         <item
@@ -29,6 +29,18 @@
             android:id="@+id/nav_series"
             android:icon="@drawable/baseline_live_tv_24"
             android:title="Series" />
+        <item
+            android:id="@+id/nav_reservation"
+            android:icon="@drawable/couch"
+            android:title="Reservation" />
+        <item
+            android:id="@+id/nav_my_reservations"
+            android:icon="@drawable/couch"
+            android:title="My reservations" />
+        <item
+            android:id="@+id/nav_add_movie"
+            android:icon="@drawable/baseline_videocam_24"
+            android:title="Add movie" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/baseline_logout_24"

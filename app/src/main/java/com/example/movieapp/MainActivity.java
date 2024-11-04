@@ -40,14 +40,23 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_users) {
                 Intent intent = new Intent(MainActivity.this, Users.class);
                 startActivity(intent);
-            } else if (id == R.id.nav_reservation) {
-                Intent intent = new Intent(MainActivity.this, admin_resertvations.class);
+            } else if (id == R.id.nav_reservations) {
+                Intent intent = new Intent(MainActivity.this, Reservations.class);
                 startActivity(intent);
             } else if (id == R.id.nav_streaming) {
                 Intent intent = new Intent(MainActivity.this,Streaming.class);
                 startActivity(intent);
-            }else if (id == R.id.nav_series) {
+            } else if (id == R.id.nav_series) {
                 Intent intent = new Intent(MainActivity.this, Series.class);
+                startActivity(intent);
+            } else if (id == R.id.nav_reservation) {
+                Intent intent = new Intent(MainActivity.this, SeatReservation.class);
+                startActivity(intent);
+            } else if (id == R.id.nav_my_reservations) {
+                Intent intent = new Intent(MainActivity.this, MyReservations.class);
+                startActivity(intent);
+            } else if (id == R.id.nav_add_movie) {
+                Intent intent = new Intent(MainActivity.this, AddMovieByHelmi.class);
                 startActivity(intent);
             } else if (id == R.id.nav_logout) {
                 auth.getInstance().signOut();

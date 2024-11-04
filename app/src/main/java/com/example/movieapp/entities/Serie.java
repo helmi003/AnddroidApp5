@@ -10,7 +10,6 @@ import com.example.movieapp.converters.Converters;
 import java.io.Serializable;
 
 @Entity(tableName="serie")
-@TypeConverters({Converters.class})
 public class Serie implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;

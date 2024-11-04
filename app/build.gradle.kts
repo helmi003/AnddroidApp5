@@ -19,7 +19,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -52,4 +52,6 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:1.4.1")
     implementation("androidx.media3:media3-ui:1.4.1")
     implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.github.yuriy-budiyev:code-scanner:2.3.0")
 }

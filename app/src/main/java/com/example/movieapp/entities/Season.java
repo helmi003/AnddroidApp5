@@ -15,7 +15,6 @@ import java.io.Serializable;
                 parentColumns = "id",
                 childColumns = "serieId",
                 onDelete = ForeignKey.CASCADE))
-@TypeConverters({Converters.class})
 public class Season implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;

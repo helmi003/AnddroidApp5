@@ -6,29 +6,45 @@ import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Entity(tableName = "reservation",
-        foreignKeys = @ForeignKey(
-                entity = User.class,
-                parentColumns = "id",
-                childColumns = "userId",
-                onDelete = ForeignKey.CASCADE
-        ))
+        foreignKeys = {
+                @ForeignKey(
+                        entity = User.class,
+                        parentColumns = "id",
+                        childColumns = "userId",
+                        onDelete = ForeignKey.CASCADE
+                ),
+                @ForeignKey(
+                        entity = Movie.class,
+                        parentColumns = "id",
+                        childColumns = "movieId",
+                        onDelete = ForeignKey.CASCADE
+                )
+        })
 public class Reservation implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int code;
     @ColumnInfo(name = "places")
-    private List<String> places;
+    private List<String> seats;
+    @ColumnInfo(name = "created_date")
+    private Date createdDate = new Date();
     @ColumnInfo(name = "userId")
-    private int userId;
+    private String userId;
+    @ColumnInfo(name = "movieId")
+    private int movieId;
 
-    public Reservation(int id, int code, List<String> places, int userId) {
+    public Reservation(int id, int code, List<String> seats, Date createdDate, String userId, int movieId) {
         this.id = id;
         this.code = code;
-        this.places = places;
+        this.seats = seats;
+        this.createdDate = createdDate;
         this.userId = userId;
+        this.movieId = movieId;
     }
 
     public int getId() {
@@ -47,20 +63,36 @@ public class Reservation implements Serializable {
         this.code = code;
     }
 
-    public List<String> getPlaces() {
-        return places;
+    public List<String> getSeats() {
+        return seats;
     }
 
-    public void setPlaces(List<String> places) {
-        this.places = places;
+    public void setSeats(List<String> seats) {
+        this.seats = seats;
     }
 
-    public int getUserId() {
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public int getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
     }
 
     @Override
@@ -68,8 +100,10 @@ public class Reservation implements Serializable {
         return "Reservation{" +
                 "id=" + id +
                 ", code=" + code +
-                ", places=" + places +
+                ", seats=" + seats +
+                ", createdDate=" + createdDate +
                 ", userId=" + userId +
+                ", movieId=" + movieId +
                 '}';
     }
 }

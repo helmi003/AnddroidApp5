@@ -2,26 +2,29 @@ package com.example.movieapp.entities;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.example.movieapp.converters.Converters;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Entity(tableName = "movies")
+@Entity(tableName = "movie")
 public class Movie {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String title;
-    private String image;
-    private String description;
-    private List<String> Seat;
-    private Date releaseDate;
+    private List<String> seats;
 
-    public Movie(int id, String title, String image, String description, List<String> seat, Date releaseDate) {
+    public Movie() {
+        this.seats = new ArrayList<>();
+    }
+
+    public Movie(int id, String title, List<String> seats) {
         this.id = id;
         this.title = title;
-        this.image = image;
-        this.description = description;
-        Seat = seat;
-        this.releaseDate = releaseDate;
+        this.seats = seats;
     }
 
     public int getId() {
@@ -40,36 +43,12 @@ public class Movie {
         this.title = title;
     }
 
-    public String getImage() {
-        return image;
+    public List<String> getSeats() {
+        return seats;
     }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<String> getSeat() {
-        return Seat;
-    }
-
-    public void setSeat(List<String> seat) {
-        Seat = seat;
-    }
-
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
+    public void setSeats(List<String> seats) {
+        this.seats = seats;
     }
 
     @Override
@@ -77,10 +56,7 @@ public class Movie {
         return "Movie{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", image='" + image + '\'' +
-                ", description='" + description + '\'' +
-                ", Seat=" + Seat +
-                ", releaseDate=" + releaseDate +
+                ", Seats=" + seats +
                 '}';
     }
 }

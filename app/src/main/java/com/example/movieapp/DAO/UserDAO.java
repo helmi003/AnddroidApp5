@@ -18,8 +18,9 @@ public interface UserDAO {
     void deleteUser(User user);
     @Update
     void updateUser(User user);
-    @Query("SELECT * FROM user")
+    @Query("SELECT * FROM user ORDER BY id DESC")
     List<User> getAllUsers();
+
     @Query("SELECT * FROM user WHERE id = :id LIMIT 1")
     User getUserById(String id);
 

@@ -18,8 +18,10 @@ public interface ReservationDAO {
     void deleteReservation(Reservation reservation);
     @Update
     void updateReservation(Reservation reservation);
-    @Query("SELECT * FROM reservation")
+    @Query("SELECT * FROM reservation ORDER BY id DESC")
     List<Reservation> getAllReservations();
+    @Query("SELECT * FROM reservation WHERE userId = :id ORDER BY id DESC")
+    List<Reservation> getAllReservationsByUser(String id);
     @Query("SELECT * FROM reservation where id = :id")
-    User getReservationById(int id);
+    Reservation getReservationById(int id);
 }
