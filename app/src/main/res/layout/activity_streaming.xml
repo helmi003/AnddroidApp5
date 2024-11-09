@@ -25,11 +25,10 @@
             app:tint="@color/white" />
 
         <TextView
-            android:id="@+id/seriesTitle"
+            android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Serie title"
             android:textAlignment="center"
             android:textColor="@color/yellow"
             android:textSize="25sp"
@@ -77,6 +76,14 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="4dp"
+        android:textColor="@color/gray" />
     <!-- Episodes List -->
     <TextView
         android:layout_width="match_parent"
@@ -84,7 +91,6 @@
         android:text="Episodes"
         android:textSize="18sp"
         android:paddingStart="16dp"
-        android:paddingTop="8dp"
         android:textColor="@color/white"
         android:textStyle="bold" />
 

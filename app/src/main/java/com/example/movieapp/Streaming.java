@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.OptIn;
@@ -38,6 +39,11 @@ public class Streaming extends AppCompatActivity {
     private RecyclerView episodesRecyclerView;
     private RecyclerView seasonsRecyclerView;
     ImageView backArrow;
+    TextView title;
+    TextView description;
+    Serie serie;
+    private ApplicationDatabase database;
+
     private ImageButton playButton;
     int serieId = 1;
 
@@ -45,8 +51,14 @@ public class Streaming extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_streaming);
+        database = ApplicationDatabase.getAppDatabase(this);
         episodesRecyclerView = findViewById(R.id.episodesRecyclerView);
         seasonsRecyclerView = findViewById(R.id.seasonsRecyclerView);
+        title = findViewById(R.id.title);
+        description = findViewById(R.id.description);
+        serie = database.serieDAO().getSerieById(serieId);
+        title.setText(serie.getTitle());
+        description.setText(serie.getDescription());
         backArrow = findViewById(R.id.backArrow);
         backArrow.setOnClickListener(v -> {
             finish();
@@ -66,14 +78,14 @@ public class Streaming extends AppCompatActivity {
     }
 
     private void loadSeasons() {
-        List<Season> seasons = ApplicationDatabase.getAppDatabase(this).seasonDAO().getAllSeasonsBySerie(serieId);
+        List<Season> seasons = database.seasonDAO().getAllSeasonsBySerie(serieId);
         SeasonAdapter adapter = new SeasonAdapter(seasons, seasonId -> loadEpisodes(seasonId), this);
         seasonsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         seasonsRecyclerView.setAdapter(adapter);
     }
 
     private void loadEpisodes(int seasonId) {
-        List<Episode> episodes = ApplicationDatabase.getAppDatabase(this).episodeDAO().getAllEpisodessBySeason(seasonId);
+        List<Episode> episodes = database.episodeDAO().getAllEpisodessBySeason(seasonId);
         EpisodeAdapter adapter = new EpisodeAdapter(this, episodes, episode -> {
             Intent intent = new Intent(Streaming.this, FullScreenVideo.class);
             //intent.putExtra("videoUrl", episode.getVideo());

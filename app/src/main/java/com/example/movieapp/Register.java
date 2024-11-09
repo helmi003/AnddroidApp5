@@ -45,6 +45,7 @@ public class Register extends AppCompatActivity {
     FirebaseAuth auth;
     ProgressBar buttonProgress;
     private ApplicationDatabase database;
+    Role role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,15 +69,12 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isPasswordVisible) {
-                    // Set to password type
                     password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     toggle.setImageResource(R.drawable.baseline_visibility_off_24);
                 } else {
-                    // Set to visible password type
                     password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     toggle.setImageResource(R.drawable.baseline_remove_red_eye_24);
                 }
-                // Keep the cursor at the end of the text
                 password.setSelection(password.getText().length());
                 isPasswordVisible = !isPasswordVisible;
             }
@@ -115,12 +113,20 @@ public class Register extends AppCompatActivity {
             if (emailText.isEmpty() || passwordText.isEmpty() || phoneText.isEmpty() || usernameText.isEmpty()) {
                 Toast.makeText(Register.this, "All fields are required", Toast.LENGTH_SHORT).show();
                 return;
-            }else if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
                 Toast.makeText(Register.this, "That is not a correct email", Toast.LENGTH_SHORT).show();
                 return;
-            }else if(!passwordText.equals(confirmPasswordText)){
+            } else if (phoneText.length()!=8) {
+                Toast.makeText(Register.this, "Phone number must contains 8 digits", Toast.LENGTH_SHORT).show();
+                return;
+            } else if(!passwordText.equals(confirmPasswordText)) {
                 Toast.makeText(Register.this, "The confirm password should match the password.", Toast.LENGTH_SHORT).show();
                 return;
+            }
+            if(emailText.matches("helmi.benromdhane@esprit.tn")){
+                role = Role.ADMIN;
+            }else{
+                role = Role.USER;
             }
             register.setEnabled(false);
             register.setText("");
@@ -135,7 +141,8 @@ public class Register extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 FirebaseUser user = task.getResult().getUser();
                                 String userId = user.getUid();
-                                database.userDAO().createUser(new User(userId,usernameText,Long.parseLong(phoneText),emailText, Role.USER,passwordText,false,false));
+
+                                database.userDAO().createUser(new User(userId,usernameText,Long.parseLong(phoneText),emailText, role,passwordText,false,false));
                                 Toast.makeText(Register.this, "Authentication success.",
                                         Toast.LENGTH_SHORT).show();
                                 user.sendEmailVerification()

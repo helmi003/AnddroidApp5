@@ -8,8 +8,13 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.example.movieapp.database.ApplicationDatabase;
+import com.example.movieapp.entities.Role;
+import com.example.movieapp.entities.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,12 +22,18 @@ public class MainActivity extends AppCompatActivity {
     ImageView navView;
     NavigationView navigationView;
     FirebaseAuth auth;
+    FirebaseUser currentUser;
+    User user;
+    private ApplicationDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         EdgeToEdge.enable(this);
         auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
+        database = ApplicationDatabase.getAppDatabase(this);
+        user = database.userDAO().getUserById(currentUser.getUid());
         drawerLayout = findViewById(R.id.drawer_layout);
         navView = findViewById(R.id.menuIcon);
         navigationView = findViewById(R.id.nav_view);
@@ -37,6 +48,15 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_profile) {
                 Intent intent = new Intent(MainActivity.this,Profil.class);
                 startActivity(intent);
+            } else if (id == R.id.nav_support) {
+                if(user.role== Role.ADMIN){
+                    Intent intent = new Intent(MainActivity.this,UsersFeebacks.class);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(MainActivity.this,Support.class);
+                    startActivity(intent);
+                }
+
             } else if (id == R.id.nav_users) {
                 Intent intent = new Intent(MainActivity.this, Users.class);
                 startActivity(intent);
