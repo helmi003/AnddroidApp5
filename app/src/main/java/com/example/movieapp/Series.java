@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.movieapp.adaptater.SerieAdapter;
+import com.example.movieapp.adaptater.SerieAdminAdapter;
 import com.example.movieapp.database.ApplicationDatabase;
 import com.example.movieapp.entities.Serie;
 import java.util.List;
@@ -49,8 +49,10 @@ public class Series extends AppCompatActivity {
 
     private void loadSeries() {
         List<Serie> series = ApplicationDatabase.getAppDatabase(this).serieDAO().getAllSeries();
-        SerieAdapter adapter = new SerieAdapter(this, series);
-        seriesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        SerieAdminAdapter adapter = new SerieAdminAdapter(this, series);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        seriesRecyclerView.setLayoutManager(layoutManager);
         seriesRecyclerView.setAdapter(adapter);
     }
+
 }

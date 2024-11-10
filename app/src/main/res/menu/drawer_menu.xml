@@ -14,13 +14,9 @@
             android:icon="@drawable/couch"
             android:title="Reservations" />
         <item
-            android:id="@+id/nav_streaming"
-            android:icon="@drawable/baseline_live_tv_24"
-            android:title="Streaming" />
-        <item
             android:id="@+id/nav_series"
             android:icon="@drawable/baseline_live_tv_24"
-            android:title="Series" />
+            android:title="Add serie" />
         <item
             android:id="@+id/nav_my_reservations"
             android:icon="@drawable/couch"

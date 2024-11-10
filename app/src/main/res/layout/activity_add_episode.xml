@@ -55,6 +55,27 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/movieImageViewDisplay"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="20dp"
+                android:src="@drawable/ic_placeholder_image"
+                android:scaleType="centerCrop"
+                android:background="@drawable/rounded_seatdetail" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/selectImageButton"
+                style="@android:style/Widget.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:paddingHorizontal="10dp"
+                android:layout_gravity="center"
+                android:text="Select image"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -82,39 +103,6 @@
                     android:background="@android:color/transparent"
                     android:hint="Episode number"
                     android:inputType="number"
-                    android:textAlignment="viewStart"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/gray" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edittext_background">
-
-                <ImageView
-                    android:id="@+id/icon_image"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/baseline_image_24"
-                    app:tint="@color/white" />
-
-                <EditText
-                    android:id="@+id/image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_toEndOf="@id/icon_image"
-                    android:background="@android:color/transparent"
-                    android:hint="Image"
-                    android:inputType="text"
                     android:textAlignment="viewStart"
                     android:textColor="@color/white"
                     android:textColorHint="@color/gray" />

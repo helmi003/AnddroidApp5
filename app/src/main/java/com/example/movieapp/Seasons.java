@@ -3,24 +3,16 @@ package com.example.movieapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.movieapp.adaptater.SeasonAdapter;
 import com.example.movieapp.adaptater.SeasonAdminAdapter;
-import com.example.movieapp.adaptater.SerieAdapter;
 import com.example.movieapp.database.ApplicationDatabase;
 import com.example.movieapp.entities.Season;
-import com.example.movieapp.entities.Serie;
 
 import java.util.List;
 

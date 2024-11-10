@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
 import com.example.movieapp.entities.Episode;
 import java.util.List;
@@ -34,6 +36,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
     public void onBindViewHolder(@NonNull EpisodeViewHolder holder, int position) {
         Episode episode = episodeList.get(position);
         holder.titleTextView.setText("Episode " + episode.getNumber());
+        Glide.with(context).load(episode.getImage()).into(holder.imageView);
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onEpisodeClick(episode); // Assuming Episode has a method getVideoUrl()

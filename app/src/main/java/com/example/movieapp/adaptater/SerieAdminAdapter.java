@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
 import com.example.movieapp.Seasons;
-import com.example.movieapp.Streaming;
 import com.example.movieapp.entities.Serie;
 import java.util.List;
 
@@ -19,12 +18,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public class SerieAdapter extends RecyclerView.Adapter<SerieAdapter.SerieViewHolder> {
+public class SerieAdminAdapter extends RecyclerView.Adapter<SerieAdminAdapter.SerieViewHolder> {
 
     private List<Serie> series;
     private Context context;
 
-    public SerieAdapter(Context context, List<Serie> series) {
+    public SerieAdminAdapter(Context context, List<Serie> series) {
         this.context = context;
         this.series = series;
     }
@@ -62,7 +61,7 @@ public class SerieAdapter extends RecyclerView.Adapter<SerieAdapter.SerieViewHol
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     Serie serie = series.get(position);
-                    Intent intent = new Intent(context, Streaming.class);
+                    Intent intent = new Intent(context, Seasons.class);
                     intent.putExtra("serieID", serie.getId());
                     context.startActivity(intent);
                 }

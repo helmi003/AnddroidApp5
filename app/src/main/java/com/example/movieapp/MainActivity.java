@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser currentUser;
     User user;
     ImageView profil;
+    ImageView watchSerie;
     private RecyclerView.Adapter adapterBestMovies,adapterUpComing,adapterCategory;
     private RecyclerView recyclerViewBestMovies,recyclerViewUpComing,recyclerViewCategory;
     private RequestQueue mRequestQueue;
@@ -73,9 +74,14 @@ public class MainActivity extends AppCompatActivity {
         sendRequestUpComing();
         sendRequestCategories();
         drawerLayout = findViewById(R.id.drawer_layout);
+        watchSerie = findViewById(R.id.watchSerie);
         navView = findViewById(R.id.menuIcon);
         profil = findViewById(R.id.profil);
         navigationView = findViewById(R.id.nav_view);
+        watchSerie.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this,WatchSeries.class);
+            startActivity(intent);
+        });
         navView.setOnClickListener(view -> {
             drawerLayout.openDrawer(GravityCompat.START);
         });
@@ -99,9 +105,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             } else if (id == R.id.nav_reservations) {
                 Intent intent = new Intent(MainActivity.this, Reservations.class);
-                startActivity(intent);
-            } else if (id == R.id.nav_streaming) {
-                Intent intent = new Intent(MainActivity.this,Streaming.class);
                 startActivity(intent);
             } else if (id == R.id.nav_series) {
                 Intent intent = new Intent(MainActivity.this, Series.class);
