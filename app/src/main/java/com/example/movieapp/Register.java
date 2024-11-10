@@ -123,7 +123,7 @@ public class Register extends AppCompatActivity {
                 Toast.makeText(Register.this, "The confirm password should match the password.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if(emailText.matches("helmi.benromdhane@esprit.tn")){
+            if(emailText.matches("admin.admin@gmail.com")){
                 role = Role.ADMIN;
             }else{
                 role = Role.USER;
@@ -149,10 +149,12 @@ public class Register extends AppCompatActivity {
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(Register.this, "Verification email sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(Register.this, "Failed to send verification email.", Toast.LENGTH_SHORT).show();
+                                                if(role != Role.ADMIN) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(Register.this, "Verification email sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(Register.this, "Failed to send verification email.", Toast.LENGTH_SHORT).show();
+                                                    }
                                                 }
                                             }
                                         });

@@ -48,6 +48,11 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/picDetail"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:src="@drawable/ic_placeholder_image"/>
         <TextView
             android:id="@+id/movieType"
             android:layout_width="match_parent"
@@ -147,12 +152,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center">
-            <include layout="@layout/seat_button" android:id="@+id/D3" />
-            <include layout="@layout/seat_button" android:id="@+id/D4" />
-            <include layout="@layout/seat_button" android:id="@+id/D5" />
-            <include layout="@layout/seat_button" android:id="@+id/D6" />
-            <include layout="@layout/seat_button" android:id="@+id/D7" />
-            <include layout="@layout/seat_button" android:id="@+id/D8" />
+                <include layout="@layout/seat_button" android:id="@+id/D3" />
+                <include layout="@layout/seat_button" android:id="@+id/D4" />
+                <include layout="@layout/seat_button" android:id="@+id/D5" />
+                <include layout="@layout/seat_button" android:id="@+id/D6" />
+                <include layout="@layout/seat_button" android:id="@+id/D7" />
+                <include layout="@layout/seat_button" android:id="@+id/D8" />
             </LinearLayout>
             <include layout="@layout/seat_button" android:id="@+id/D9" />
             <include layout="@layout/seat_button" android:id="@+id/D10" />
@@ -171,12 +176,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center">
-            <include layout="@layout/seat_button" android:id="@+id/E3" />
-            <include layout="@layout/seat_button" android:id="@+id/E4" />
-            <include layout="@layout/seat_button" android:id="@+id/E5" />
-            <include layout="@layout/seat_button" android:id="@+id/E6" />
-            <include layout="@layout/seat_button" android:id="@+id/E7" />
-            <include layout="@layout/seat_button" android:id="@+id/E8" />
+                <include layout="@layout/seat_button" android:id="@+id/E3" />
+                <include layout="@layout/seat_button" android:id="@+id/E4" />
+                <include layout="@layout/seat_button" android:id="@+id/E5" />
+                <include layout="@layout/seat_button" android:id="@+id/E6" />
+                <include layout="@layout/seat_button" android:id="@+id/E7" />
+                <include layout="@layout/seat_button" android:id="@+id/E8" />
             </LinearLayout>
             <include layout="@layout/seat_button" android:id="@+id/E9" />
             <include layout="@layout/seat_button" android:id="@+id/E10" />
@@ -195,12 +200,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center">
-            <include layout="@layout/seat_button" android:id="@+id/F3" />
-            <include layout="@layout/seat_button" android:id="@+id/F4" />
-            <include layout="@layout/seat_button" android:id="@+id/F5" />
-            <include layout="@layout/seat_button" android:id="@+id/F6" />
-            <include layout="@layout/seat_button" android:id="@+id/F7" />
-            <include layout="@layout/seat_button" android:id="@+id/F8" />
+                <include layout="@layout/seat_button" android:id="@+id/F3" />
+                <include layout="@layout/seat_button" android:id="@+id/F4" />
+                <include layout="@layout/seat_button" android:id="@+id/F5" />
+                <include layout="@layout/seat_button" android:id="@+id/F6" />
+                <include layout="@layout/seat_button" android:id="@+id/F7" />
+                <include layout="@layout/seat_button" android:id="@+id/F8" />
             </LinearLayout>
             <include layout="@layout/seat_button" android:id="@+id/F9" />
             <include layout="@layout/seat_button" android:id="@+id/F10" />
@@ -286,7 +291,7 @@
                 android:padding="10dp">
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -296,7 +301,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textView8"
+                    android:id="@+id/time"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
@@ -331,7 +336,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
-                    android:text="TextView"
+                    android:text="Room 1"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textStyle="bold" />

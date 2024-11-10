@@ -10,11 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.movieapp.Episodes;
+import com.example.movieapp.Models.Movie;
 import com.example.movieapp.QRCodeViewer;
 import com.example.movieapp.R;
 import com.example.movieapp.database.ApplicationDatabase;
-import com.example.movieapp.entities.Movie;
 import com.example.movieapp.entities.Reservation;
 import com.example.movieapp.entities.User;
 

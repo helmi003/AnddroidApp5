@@ -24,6 +24,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.movieapp.database.ApplicationDatabase;
+import com.example.movieapp.entities.Role;
 import com.example.movieapp.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -107,22 +108,19 @@ public class Login extends AppCompatActivity {
                             buttonProgress.setVisibility(View.GONE);
                             login.setEnabled(true);
                             login.setText("Login");
-                            if (task.isSuccessful()) {
-                                FirebaseUser user2 = task.getResult().getUser();
-                                boolean check = user2.isEmailVerified();
-                                if(check){
-                                    Toast.makeText(Login.this, "Authentication success.",
-                                            Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(Login.this, MainActivity.class);
-                                    startActivity(intent);
-                                }else{
-                                    Toast.makeText(Login.this, "You must verify your email first.",
-                                            Toast.LENGTH_SHORT).show();
+                                if (task.isSuccessful()) {
+                                    FirebaseUser user2 = task.getResult().getUser();
+                                    boolean check = user2.isEmailVerified();
+                                    if (check || emailText.matches("admin.admin@gmail.com")) {
+                                        Toast.makeText(Login.this, "Authentication success.",
+                                                Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(Login.this, MainActivity.class);
+                                        startActivity(intent);
+                                    } else {
+                                        Toast.makeText(Login.this, "You must verify your email first.",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            } else {
-                                Toast.makeText(Login.this, "There are no credentials with the provided information",
-                                        Toast.LENGTH_SHORT).show();
-                            }
                         }
             });
         });

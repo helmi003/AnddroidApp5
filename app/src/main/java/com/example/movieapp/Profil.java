@@ -58,15 +58,21 @@ public class Profil extends AppCompatActivity {
         loadProfile();
     }
 
-    private void loadProfile(){
+    private void loadProfile() {
         if (currentUser != null) {
             user = database.userDAO().getUserById(currentUser.getUid());
-            Log.d("user",user.toString());
-            username.setText(user.getUsername());
-            phone.setText(user.getPhone().toString());
-            email.setText(user.getEmail());
-        }else{
-            Log.d("nothing","nothing");
+            if (user != null) {
+                Log.d("user", user.toString());
+                username.setText(user.getUsername());
+                phone.setText(user.getPhone().toString());
+                email.setText(user.getEmail());
+            } else {
+                Log.d("Profil", "User data not found in local database");
+                // You can handle this case, e.g., show a default message or fetch user data from Firebase
+            }
+        } else {
+            Log.d("Profil", "No current Firebase user");
         }
     }
+
 }

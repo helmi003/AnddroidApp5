@@ -3,12 +3,7 @@ package com.example.movieapp.entities;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
-
-import com.example.movieapp.converters.Converters;
-
 import java.io.Serializable;
-
 @Entity(tableName="serie")
 public class Serie implements Serializable {
     @PrimaryKey(autoGenerate = true)

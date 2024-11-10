@@ -61,12 +61,12 @@ public class SplashScreen extends AppCompatActivity {
 
     private void proceedToNextScreen() {
         if (currentUser == null) {
-            startActivity(new Intent(this, Login.class));
+            startActivity(new Intent(this, StartingScreen.class));
         } else {
             if(currentUser.isEmailVerified()){
                 startActivity(new Intent(this, MainActivity.class));
             }else{
-                startActivity(new Intent(this, Login.class));
+                startActivity(new Intent(this, StartingScreen.class));
             }
         }
         finish();
