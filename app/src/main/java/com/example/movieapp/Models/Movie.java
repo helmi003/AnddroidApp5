@@ -1,53 +1,65 @@
 package com.example.movieapp.Models;
 
+import android.net.ParseException;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import com.example.movieapp.Converters.ActorTypeConverter;
-import com.example.movieapp.Converters.CategoryTypeConverter;
-import com.example.movieapp.Converters.DateConverter;
-import com.example.movieapp.Converters.RoomShowtimeConverter;
+import com.example.movieapp.Converters.Converters;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Entity(tableName = "movies")
 public class Movie {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String title;
-    private String image;
+    private String imageUri;
     private String description;
-    @TypeConverters(DateConverter.class)
+
+    @TypeConverters({Converters.class})  // Use the Date converter
     private Date releaseDate;
 
-    // Relationships
-    @TypeConverters(ActorTypeConverter.class)
-    private List<Actor> actors;
+    @TypeConverters({Converters.class})  // Use the converter for List<Integer>
+    private List<Integer> actorIds;
 
-    @TypeConverters(CategoryTypeConverter.class)
-    private List<MovieCategory> categories;
+    @TypeConverters({Converters.class})  // Use the converter for List<String> or MovieCategory
+    private List<String> categories;
 
-    @TypeConverters(RoomShowtimeConverter.class)
-    private Map<Room, List<Showtime>> showtimesMap;
-
-    public Movie(int id, String title, String image, String description, Date releaseDate, List<Actor> actors, List<MovieCategory> categories, Map<Room, List<Showtime>> showtimesMap) {
-        this.id = id;
+    public Movie(String title, String description, String releaseDateString,String imageUri, List<Integer> actorIds, List<String> categories) {
         this.title = title;
-        this.image = image;
+        this.description = description;
+        this.actorIds = actorIds;
+        this.categories = categories;
+        this.imageUri = imageUri;
+
+        // Convert the release date String to Date
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Use the format that matches your input
+        try {
+            this.releaseDate = dateFormat.parse(releaseDateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            this.releaseDate = null; // Set to null or handle it appropriately
+        } catch (java.text.ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public Movie(String title, String imageUri, String description, Date releaseDate, List<Integer> actorIds, List<String> categories) {
+        this.title = title;
+        this.imageUri = imageUri;
         this.description = description;
         this.releaseDate = releaseDate;
-        this.actors = actors;
+        this.actorIds = actorIds;
         this.categories = categories;
-        this.showtimesMap = showtimesMap;
     }
 
-    public Movie() {
-
-    }
-
+    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -64,12 +76,12 @@ public class Movie {
         this.title = title;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUri() {
+        return imageUri;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 
     public String getDescription() {
@@ -88,27 +100,19 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-    public List<Actor> getActors() {
-        return actors;
+    public List<Integer> getActorIds() {
+        return actorIds;
     }
 
-    public void setActors(List<Actor> actors) {
-        this.actors = actors;
+    public void setActorIds(List<Integer> actorIds) {
+        this.actorIds = actorIds;
     }
 
-    public List<MovieCategory> getCategories() {
+    public List<String> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<MovieCategory> categories) {
+    public void setCategories(List<String> categories) {
         this.categories = categories;
-    }
-
-    public Map<Room, List<Showtime>> getShowtimesMap() {
-        return showtimesMap;
-    }
-
-    public void setShowtimesMap(Map<Room, List<Showtime>> showtimesMap) {
-        this.showtimesMap = showtimesMap;
     }
 }

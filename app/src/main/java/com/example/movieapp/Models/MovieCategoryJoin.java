@@ -1,29 +1,47 @@
 package com.example.movieapp.Models;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 import androidx.room.ForeignKey;
 
-@Entity(
-        primaryKeys = {"movieId", "category"},
+@Entity(tableName = "movie_category_join",
         foreignKeys = {
-                @ForeignKey(entity = Movie.class, parentColumns = "id", childColumns = "movieId")
-        }
-)
+                @ForeignKey(entity = Movie.class, parentColumns = "id", childColumns = "movieId", onDelete = ForeignKey.CASCADE)
+        })
 public class MovieCategoryJoin {
-    public int movieId;
 
-    @NonNull
-    public String category; // Store category as a String
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    private int movieId;
+    private String categoryId; // Store category as String, not an int
 
-    // Empty constructor for Room
-    public MovieCategoryJoin() {
-        // Required empty constructor for Room
+    // Default constructor, getters, and setters
+    public MovieCategoryJoin(int movieId, String categoryId) {
+        this.movieId = movieId;
+        this.categoryId = categoryId;
     }
 
-    // Parameterized constructor matching the fields
-    public MovieCategoryJoin(int movieId, @NonNull String category) {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(int movieId) {
         this.movieId = movieId;
-        this.category = category; // Accept a String directly
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 }

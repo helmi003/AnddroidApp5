@@ -1,158 +1,206 @@
 package com.example.movieapp.Activities;
 
-import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.ParseException;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.movieapp.Adapters.MultiSelectAdapter;
 import com.example.movieapp.AppDatabase;
 import com.example.movieapp.Models.Actor;
-import com.example.movieapp.Models.ActorMovieJoin;
 import com.example.movieapp.Models.Movie;
 import com.example.movieapp.Models.MovieCategory;
-import com.example.movieapp.Models.MovieCategoryJoin;
-import com.example.movieapp.R; // Adjust this import based on your package structure
+import com.example.movieapp.R;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AddMovieActivity extends BaseActivity {
+    private static final int PICK_IMAGE = 1;
 
-    private static final int PICK_IMAGE_REQUEST = 1;
+    private ImageView movieImageViewDisplay;
+    private EditText releaseDateEditText;
+    private RecyclerView actorsRecyclerView;
+    private RecyclerView categoriesRecyclerView;
+    private MultiSelectAdapter<Actor> actorAdapter;
+    private MultiSelectAdapter<MovieCategory> categoryAdapter;
 
-    private ImageView movieImageView;
-    private EditText movieTitleInput, descriptionEditText, releaseDateEditText;
-    private RecyclerView actorsRecyclerView, categoriesRecyclerView;
-    private Button selectImageButton, addMovieButton;
-    private Uri imageUri;
-
+    private List<Actor> actorList = new ArrayList<>();
     private List<Actor> selectedActors = new ArrayList<>();
+    private List<MovieCategory> categoryList = Arrays.asList(MovieCategory.values());
     private List<MovieCategory> selectedCategories = new ArrayList<>();
+    private Uri movieImageUri;
+    private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_movie); // Adjust according to your layout
+        setContentView(R.layout.activity_add_movie);
 
-        movieImageView = findViewById(R.id.movieImageView);
-        movieTitleInput = findViewById(R.id.movieTitleInput);
-        descriptionEditText = findViewById(R.id.descriptionEditText);
+        // Initialize database instance
+        db = AppDatabase.getInstance(this);
+
+        // Set up UI elements
+        movieImageViewDisplay = findViewById(R.id.movieImageViewDisplay);
         releaseDateEditText = findViewById(R.id.releaseDateEditText);
+        Button selectImageButton = findViewById(R.id.selectImageButton);
+        Button addMovieButton = findViewById(R.id.addMovieButton);
         actorsRecyclerView = findViewById(R.id.actorsRecyclerView);
         categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView);
-        selectImageButton = findViewById(R.id.selectImageButton);
-        addMovieButton = findViewById(R.id.addMovieButton);
 
-        selectImageButton.setOnClickListener(v -> openFileChooser());
+        // Set up RecyclerViews with LayoutManagers
+        actorsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        addMovieButton.setOnClickListener(v -> addMovie());
+        Set<Actor> selectedActors = new HashSet<>(); // For actors
+        Set<MovieCategory> selectedCategories = new HashSet<>(); // For categories
 
-        // Set up RecyclerViews for actors and categories
-        setupRecyclerViews();
+        // Set up actor and category adapters
+        actorAdapter = new MultiSelectAdapter<>(actorList, Actor::getName);
+        actorsRecyclerView.setAdapter(actorAdapter);
+
+        categoryAdapter = new MultiSelectAdapter<>(categoryList, MovieCategory::name);
+        categoriesRecyclerView.setAdapter(categoryAdapter);
+
+        // Load actors from database
+        loadActorsFromDatabase();
+
+        // Set up image selection button
+        selectImageButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, PICK_IMAGE);
+        });
+
+        // Set up date picker for release date
+        releaseDateEditText.setOnClickListener(v -> showDatePickerDialog());
+        // Set up button to save a new movie
+        addMovieButton.setOnClickListener(v -> saveMovie());
     }
 
-    private void openFileChooser() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    private void showDatePickerDialog() {
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(AddMovieActivity.this,
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    String date = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
+                    releaseDateEditText.setText(date);
+                }, year, month, day);
+        datePickerDialog.show();
+    }
+
+    private void loadActorsFromDatabase() {
+        AsyncTask.execute(() -> {
+            actorList.clear();
+
+            List<Actor> actors = db.actorDao().getAllActors();
+            actorList.addAll(actors);
+
+            // Log for debugging
+            Log.d("AddMovieActivity", "Loaded actors: " + actors.size());
+
+            runOnUiThread(() -> actorAdapter.notifyDataSetChanged());
+        });
+    }
+
+
+    private void saveMovie() {
+        // Log selected items from actor adapter
+
+        Log.d("AddMovieActivity", "Selected Actors: " + actorAdapter.getSelectedItems());
+
+        // Log selected items from category adapter
+        Log.d("AddMovieActivity", "Selected Categories: " + categoryAdapter.getSelectedItems());
+
+        String title = ((EditText) findViewById(R.id.movieTitleInput)).getText().toString();
+        String description = ((EditText) findViewById(R.id.descriptionEditText)).getText().toString();
+        String releaseDate = releaseDateEditText.getText().toString();
+        String imagePath = movieImageUri != null ? saveImageToInternalStorage(movieImageUri) : "";
+
+        // Get selected actor IDs from the actor adapter
+        List<Integer> actorIds = new ArrayList<>();
+        for (Actor actor : actorAdapter.getSelectedItems()) {
+            actorIds.add(actor.getId());
+        }
+
+        // Get selected categories from the category adapter
+        List<String> categories = new ArrayList<>();
+        for (MovieCategory category : categoryAdapter.getSelectedItems()) {
+            categories.add(category.name());
+        }
+
+        // Create a new movie instance with categories
+        Movie newMovie = new Movie(title, description, releaseDate, imagePath, actorIds, categories);
+
+        // Save the movie in the database
+        AsyncTask.execute(() -> {
+            db.movieDao().insertMovie(newMovie);
+
+            // Log the movie details after saving
+            Log.d("AddMovieActivity", "Movie added: ");
+            Log.d("AddMovieActivity", "Title: " + newMovie.getTitle());
+            Log.d("AddMovieActivity", "Description: " + newMovie.getDescription());
+            Log.d("AddMovieActivity", "Release Date: " + newMovie.getReleaseDate());
+            Log.d("AddMovieActivity", "Image Path: " + newMovie.getImageUri());
+            Log.d("AddMovieActivity", "Actor IDs: " + actorIds.toString());
+            Log.d("AddMovieActivity", "Categories: " + categories.toString());
+
+            runOnUiThread(() -> {
+                Toast.makeText(AddMovieActivity.this, "Movie added successfully!", Toast.LENGTH_SHORT).show();
+                finish();
+            });
+        });
+    }
+    private String saveImageToInternalStorage(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            File file = new File(getFilesDir(), "movie_" + System.currentTimeMillis() + ".jpg");
+            FileOutputStream outputStream = new FileOutputStream(file);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            outputStream.close();
+            inputStream.close();
+
+            return file.getAbsolutePath(); // Return the file path for the image
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+            return "";
+        }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            imageUri = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                movieImageView.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void setupRecyclerViews() {
-        // Set up adapters for the RecyclerViews (You need to implement these adapters)
-        // Example:
-        // ActorAdapter actorAdapter = new ActorAdapter(this, selectedActors);
-        // actorsRecyclerView.setAdapter(actorAdapter);
-
-        // CategoryAdapter categoryAdapter = new CategoryAdapter(this, selectedCategories);
-        // categoriesRecyclerView.setAdapter(categoryAdapter);
-    }
-
-    private void addMovie() {
-        String title = movieTitleInput.getText().toString().trim();
-        String description = descriptionEditText.getText().toString().trim();
-        String releaseDateString = releaseDateEditText.getText().toString().trim();
-
-        if (title.isEmpty() || description.isEmpty() || releaseDateString.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-
-        Movie movie = new Movie();
-        movie.setTitle(title);
-        movie.setDescription(description);
-        movie.setReleaseDate(parseReleaseDate(releaseDateString));
-        movie.setImage(imageUri.toString()); // Save the image URI as a string
-
-        // Save movie and handle relationships
-        saveMovieToDatabase(movie);
-    }
-
-    private void saveMovieToDatabase(Movie movie) {
-        AppDatabase database = AppDatabase.getInstance(this); // Ensure this is implemented in your AppDatabase
-
-        // Launching a coroutine in the lifecycleScope
-       // lifecycleScope.launch {
-            // Insert the movie and get the generated ID
-            long movieId = database.movieDao().insertMovie(movie); // Ensure this method returns long ID
-
-            // Save selected actors to join table
-            for (Actor actor : selectedActors) {
-                database.actorMovieJoinDao().insert(new ActorMovieJoin(actor.getId(), (int) movieId));
-            }
-
-            // Save selected categories to join table
-        for (MovieCategory category : selectedCategories) {
-            database.movieCategoryJoinDao().insert(new MovieCategoryJoin((int) movieId, category.name())); // Convert enum to String
-        }
-
-
-        // Show success message on the main thread
-            runOnUiThread(() -> {
-                Toast.makeText(AddMovieActivity.this, "Movie added successfully!", Toast.LENGTH_SHORT).show();
-                finish(); // Close the activity after adding the movie
-            });
-        //}
-    }
-
-    // Implement your date parsing logic here
-    private Date parseReleaseDate(String dateString) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); // Adjust format if needed
-        try {
-            return format.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null; // Handle parse exception as needed
-        } catch (java.text.ParseException e) {
-            throw new RuntimeException(e);
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
+            movieImageUri = data.getData();  // Store the selected image URI
+            movieImageViewDisplay.setImageURI(movieImageUri); // Set image to ImageView
         }
     }
 }

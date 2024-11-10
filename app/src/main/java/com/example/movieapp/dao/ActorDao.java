@@ -26,4 +26,5 @@ public interface ActorDao {
 
     @Query("SELECT * FROM actors WHERE id = :id")
     Actor getActorById(int id);
+
 }

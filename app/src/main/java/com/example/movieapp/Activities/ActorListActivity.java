@@ -53,6 +53,7 @@ public class ActorListActivity extends BaseActivity implements ActorAdapter.OnIt
             actorList.addAll(appDatabase.actorDao().getAllActors()); // Get all actors from the database
             runOnUiThread(() -> actorAdapter.notifyDataSetChanged()); // Notify adapter on the main thread
         }).start();
+
     }
 
     @Override

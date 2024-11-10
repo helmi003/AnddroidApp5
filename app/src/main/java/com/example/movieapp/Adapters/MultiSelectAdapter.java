@@ -1,48 +1,60 @@
 package com.example.movieapp.Adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckedTextView;
+import android.widget.CheckBox;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.movieapp.R;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class MultiSelectAdapter<T> extends RecyclerView.Adapter<MultiSelectAdapter.ViewHolder> {
+public class MultiSelectAdapter<T> extends RecyclerView.Adapter<MultiSelectAdapter<T>.ViewHolder> {
 
-    private final List<T> items; // List of items of generic type T
-    private final List<T> selectedItems; // List of selected items of generic type T
-    private final ItemBinder<T> itemBinder; // Interface to bind items
+    private final List<T> items;
+    private final Set<T> selectedItems = new HashSet<>();
+    private final ItemCallback<T> itemCallback;
 
-    public MultiSelectAdapter(List<T> items, List<T> selectedItems, ItemBinder<T> itemBinder) {
+    public MultiSelectAdapter(List<T> items, ItemCallback<T> itemCallback) {
         this.items = items;
-        this.selectedItems = selectedItems;
-        this.itemBinder = itemBinder;
+        this.itemCallback = itemCallback;
+        Log.d("MultiSelectAdapter", "Adapter initialized with items: " + items);
     }
+
+
+
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_multi_select, parent, false); // custom layout
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         T item = items.get(position);
-        holder.checkedTextView.setText(itemBinder.getDisplayText(item));
-        holder.checkedTextView.setChecked(selectedItems.contains(item));
+        holder.textView.setText(itemCallback.getDisplayName(item));
+        holder.checkBox.setChecked(selectedItems.contains(item));
+        Log.d("MultiSelectAdapter", "Binding item: " + item + " isSelected: " + selectedItems.contains(item));
 
-        holder.checkedTextView.setOnClickListener(v -> {
-            if (holder.checkedTextView.isChecked()) {
+        holder.itemView.setOnClickListener(v -> {
+            if (selectedItems.contains(item)) {
                 selectedItems.remove(item);
-                holder.checkedTextView.setChecked(false);
             } else {
                 selectedItems.add(item);
-                holder.checkedTextView.setChecked(true);
             }
+            holder.checkBox.setChecked(selectedItems.contains(item)); // Update checkbox state
+            Log.d("MultiSelectAdapter", "Selected Items: " + selectedItems);
         });
+
     }
 
     @Override
@@ -50,17 +62,22 @@ public class MultiSelectAdapter<T> extends RecyclerView.Adapter<MultiSelectAdapt
         return items.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public CheckedTextView checkedTextView;
+    public Set<T> getSelectedItems() {
+        return selectedItems; // Provide a method to get selected items
+    }
 
-        public ViewHolder(View itemView) {
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView textView;
+        CheckBox checkBox;
+
+        ViewHolder(View itemView) {
             super(itemView);
-            checkedTextView = itemView.findViewById(android.R.id.text1);
+            textView = itemView.findViewById(android.R.id.text1); // Ensure your custom layout has this ID for TextView
+            checkBox = itemView.findViewById(R.id.checkbox); // Ensure your custom layout has this ID for CheckBox
         }
     }
 
-    // Interface to define how to display the item
-    public interface ItemBinder<T> {
-        String getDisplayText(T item);
+    public interface ItemCallback<T> {
+        String getDisplayName(T item);
     }
 }
