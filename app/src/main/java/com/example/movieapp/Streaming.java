@@ -63,7 +63,7 @@ public class Streaming extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Streaming.this, FullScreenVideo.class);
-                intent.putExtra("videoUrl", "https://www.youtube.com/watch?v=jac53THxO0I");
+                intent.putExtra("videoUrl", serie.getTrailler());
                 startActivity(intent);
             }
         });
@@ -81,7 +81,7 @@ public class Streaming extends AppCompatActivity {
         EpisodeAdapter adapter = new EpisodeAdapter(this, episodes, episode -> {
             Intent intent = new Intent(Streaming.this, FullScreenVideo.class);
             //intent.putExtra("videoUrl", episode.getVideo());
-            intent.putExtra("videoUrl", "https://www.youtube.com/watch?v=jac53THxO0I");
+            intent.putExtra("videoUrl", episode.getVideo());
             startActivity(intent);
         });
         episodesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));

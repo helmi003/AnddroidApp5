@@ -16,13 +16,16 @@ public class Serie implements Serializable {
     private Long stars;
     @ColumnInfo()
     private String imageUri;
+    @ColumnInfo()
+    private String trailler;
 
-    public Serie(int id, String title, String description, Long stars, String imageUri) {
+    public Serie(int id, String title, String description, Long stars, String imageUri, String trailler) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.stars = stars;
         this.imageUri = imageUri;
+        this.trailler = trailler;
     }
 
     public int getId() {
@@ -65,6 +68,14 @@ public class Serie implements Serializable {
         this.imageUri = imageUri;
     }
 
+    public String getTrailler() {
+        return trailler;
+    }
+
+    public void setTrailler(String trailler) {
+        this.trailler = trailler;
+    }
+
     @Override
     public String toString() {
         return "Serie{" +
@@ -73,6 +84,7 @@ public class Serie implements Serializable {
                 ", description='" + description + '\'' +
                 ", stars=" + stars +
                 ", imageUri='" + imageUri + '\'' +
+                ", trailler='" + trailler + '\'' +
                 '}';
     }
 }

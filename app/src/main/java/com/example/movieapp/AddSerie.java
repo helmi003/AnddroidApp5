@@ -31,6 +31,7 @@ public class AddSerie extends AppCompatActivity {
     TextView title;
     TextView description;
     TextView star;
+    TextView trailler;
     ImageView backArrow;
     Button selectImageButton;
     private ImageView movieImageViewDisplay;
@@ -43,6 +44,7 @@ public class AddSerie extends AppCompatActivity {
         addSerie = findViewById(R.id.addSerie);
         title = findViewById(R.id.title);
         description = findViewById(R.id.description);
+        trailler = findViewById(R.id.trailler);
         star = findViewById(R.id.star);
         backArrow = findViewById(R.id.backArrow);
         movieImageViewDisplay = findViewById(R.id.movieImageViewDisplay);
@@ -58,12 +60,13 @@ public class AddSerie extends AppCompatActivity {
             String titleText = title.getText().toString().trim();
             String descriptionText = description.getText().toString().trim();
             String starText = star.getText().toString().trim();
+            String traillerText = trailler.getText().toString().trim();
             String imagePath = movieImageUri != null ? saveImageToInternalStorage(movieImageUri) : "";
-            if (titleText.isEmpty() || descriptionText.isEmpty() || starText.isEmpty() || imagePath.isEmpty()) {
+            if (titleText.isEmpty() || descriptionText.isEmpty() || starText.isEmpty() || imagePath.isEmpty() || traillerText.isEmpty()) {
                 Toast.makeText(AddSerie.this, "Fields cannot be empty.", Toast.LENGTH_SHORT).show();
                 return;
             }else{
-                database.serieDAO().createSerie(new Serie(0,titleText,descriptionText,Long.parseLong(starText),imagePath));
+                database.serieDAO().createSerie(new Serie(0,titleText,descriptionText,Long.parseLong(starText),imagePath,traillerText));
                 Toast.makeText(AddSerie.this, "Serie added successfully", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
                 finish();

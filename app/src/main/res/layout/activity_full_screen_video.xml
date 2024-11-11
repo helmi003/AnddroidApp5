@@ -1,23 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.media3.ui.PlayerView
-    android:id="@+id/playerView"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
-    app:show_buffering="when_playing" />
+    tools:context=".FullScreenVideo">
 
-    <ImageButton
-        android:id="@+id/closeButton"
-        android:layout_width="wrap_content"
+    <!-- Back button at the top left -->
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:background="@android:color/transparent"
-        android:src="@drawable/baseline_close_24"
-        android:contentDescription="Close video player"
-        app:tint="@color/black" />
-</FrameLayout>
+        android:background="@color/dark_blue"
+        android:gravity="center_vertical"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/backArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/baseline_arrow_back_ios_new_24"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/appBarTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add epsiode"
+            android:textAlignment="center"
+            android:textColor="@color/yellow"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- WebView for displaying the video -->
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/linearLayout3" />
+</RelativeLayout>
