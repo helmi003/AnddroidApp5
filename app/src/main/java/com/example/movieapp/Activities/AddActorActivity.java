@@ -24,6 +24,7 @@ public class AddActorActivity extends BaseActivity {
     private ImageView actorProfileImage;
     private Uri imageUri;
     private ApplicationDatabase database;
+    ImageView backArrow;
 
     private static final int PICK_IMAGE_REQUEST = 1; // Constant for image selection request code
 
@@ -35,7 +36,8 @@ public class AddActorActivity extends BaseActivity {
         actorName = findViewById(R.id.actorName);
         actorBio = findViewById(R.id.actorBio);
         actorProfileImage = findViewById(R.id.actorProfileImage);
-
+        backArrow = findViewById(R.id.backArrow);
+        backArrow.setOnClickListener(view -> finish());
         // Get database instance
         database = ApplicationDatabase.getAppDatabase(this);
 

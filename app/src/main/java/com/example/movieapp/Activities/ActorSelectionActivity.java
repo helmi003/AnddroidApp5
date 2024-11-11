@@ -22,6 +22,7 @@ public class ActorSelectionActivity extends BaseActivity {
     private LinearLayout actorCheckboxContainer;
     private Button saveButton;
     private int movieId;
+    ImageView backArrow;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
@@ -34,7 +35,8 @@ public class ActorSelectionActivity extends BaseActivity {
 
         // Get movie ID from intent
         movieId = getIntent().getIntExtra("movieId", -1);
-
+        backArrow = findViewById(R.id.backArrow);
+        backArrow.setOnClickListener(view -> finish());
         if (movieId != -1) {
             executorService.execute(this::setupActorCheckboxes);
             saveButton.setOnClickListener(v -> {

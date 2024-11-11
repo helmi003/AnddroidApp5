@@ -24,7 +24,11 @@
         <item
             android:id="@+id/nav_add_movie"
             android:icon="@drawable/baseline_videocam_24"
-            android:title="Add movie" />
+            android:title="Movies" />
+        <item
+            android:id="@+id/nav_add_actors"
+            android:icon="@drawable/baseline_groups_24"
+            android:title="Actors" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/baseline_logout_24"

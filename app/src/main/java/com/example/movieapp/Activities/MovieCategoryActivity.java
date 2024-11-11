@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.movieapp.AppDatabase;
@@ -16,7 +17,8 @@ public class MovieCategoryActivity extends AppCompatActivity {
 
     private LinearLayout categoryCheckboxContainer;
     private Button saveButton;
-    private int movieId;  // This will store the selected movie's ID
+    private int movieId;
+    ImageView backArrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +27,8 @@ public class MovieCategoryActivity extends AppCompatActivity {
 
         categoryCheckboxContainer = findViewById(R.id.categoryCheckboxContainer);
         saveButton = findViewById(R.id.saveButton);
-
+        backArrow = findViewById(R.id.backArrow);
+        backArrow.setOnClickListener(view -> finish());
         movieId = getIntent().getIntExtra("movieId", -1);
         Log.d("MovieCategoryActivity", "Movie ID: " + movieId);  // Log the movie ID
 

@@ -3,8 +3,11 @@ package com.example.movieapp.Activities;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,12 +24,29 @@ public class ActorListActivity extends BaseActivity implements ActorAdapter.OnIt
     private ActorAdapter actorAdapter;
     private List<Actor> actorList;
     private ApplicationDatabase database;
+    ImageView backArrow;
+    ImageView plus;
+
+    private final ActivityResultLauncher<Intent> addActorLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    fetchActorData();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actor_list);
-
+        backArrow = findViewById(R.id.backArrow);
+        plus = findViewById(R.id.plus);
+        backArrow.setOnClickListener(view -> finish());
+        plus.setOnClickListener(view -> {
+            Intent intent = new Intent(ActorListActivity.this,AddActorActivity.class);
+            addActorLauncher.launch(intent);
+        });
         // Initialize RecyclerView and set the adapter
         actorsRecyclerView = findViewById(R.id.actorsRecyclerView);
         actorsRecyclerView.setLayoutManager(new LinearLayoutManager(this));

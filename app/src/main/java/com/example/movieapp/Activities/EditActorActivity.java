@@ -28,6 +28,7 @@ public class EditActorActivity extends AppCompatActivity {
     private ActorDao actorDao;
     private Actor actor; // Actor object for Room
     private int actorKey;
+    ImageView backArrow;
 
     private static final int PICK_IMAGE_REQUEST = 1; // Request code for picking an image
     private Uri imageUri; // To store the image URI
@@ -41,7 +42,8 @@ public class EditActorActivity extends AppCompatActivity {
         editActorBio = findViewById(R.id.editActorBio);
         editActorProfileImage = findViewById(R.id.editActorProfileImage);
         saveButton = findViewById(R.id.saveButton);
-
+        backArrow = findViewById(R.id.backArrow);
+        backArrow.setOnClickListener(view -> finish());
         // Initialize Room database
         database = ApplicationDatabase.getAppDatabase(this);
         actorDao = database.actorDao();

@@ -26,6 +26,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
+import com.example.movieapp.Activities.ActorListActivity;
 import com.example.movieapp.Activities.AddMovieActivity;
 import com.example.movieapp.Activities.DetailActivity;
 import com.example.movieapp.Activities.MovieList;
@@ -89,17 +90,20 @@ public class MainActivity extends AppCompatActivity {
         MenuItem addSerieItem = menu.findItem(R.id.nav_series);
         MenuItem reservationsItem = menu.findItem(R.id.nav_reservations);
         MenuItem usersItem = menu.findItem(R.id.nav_users);
+        MenuItem actorsItem = menu.findItem(R.id.nav_add_actors);
 
         if (user.role == Role.ADMIN) {
-            //addMovieItem.setVisible(true);
+            addMovieItem.setVisible(true);
             addSerieItem.setVisible(true);
             reservationsItem.setVisible(true);
             usersItem.setVisible(true);
+            actorsItem.setVisible(true);
         } else {
-            //addMovieItem.setVisible(false);
+            addMovieItem.setVisible(false);
             addSerieItem.setVisible(false);
             reservationsItem.setVisible(false);
             usersItem.setVisible(false);
+            actorsItem.setVisible(false);
         }
 
         watchSerie.setOnClickListener(view -> {
@@ -138,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             } else if (id == R.id.nav_add_movie) {
                 Intent intent = new Intent(MainActivity.this, MovieList.class);
+                startActivity(intent);
+            } else if (id == R.id.nav_add_actors) {
+                Intent intent = new Intent(MainActivity.this, ActorListActivity.class);
                 startActivity(intent);
             } else if (id == R.id.nav_logout) {
                 auth.getInstance().signOut();

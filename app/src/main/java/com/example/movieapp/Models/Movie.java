@@ -1,10 +1,8 @@
 package com.example.movieapp.Models;
 
 import android.net.ParseException;
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,50 +16,39 @@ public class Movie {
     private String imageUri;
     private String description;
     private List<String> seats;
-
     private Date releaseDate;
-
     private List<Integer> actorIds;
-
     private List<String> categories;
 
+    // Default constructor
     public Movie() {
         this.seats = new ArrayList<>();
-        this.categories = categories != null ? categories : new ArrayList<>();
+        this.categories = new ArrayList<>();
+        this.actorIds = new ArrayList<>();
     }
 
-    public Movie(String title, String description, String releaseDateString, String imageUri, List<Integer> actorIds, List<String> categories, List<String> seats) {
+    // Updated constructor with field assignments
+    public Movie(String title, String description, String releaseDateString, String imageUri) {
         this.title = title;
         this.description = description;
-        this.actorIds = actorIds;
         this.imageUri = imageUri;
-        this.seats = seats != null ? seats : new ArrayList<>();
-        this.categories = categories != null ? categories : new ArrayList<>();
 
-        // Convert the release date String to Date
+        // Convert the release date string to Date object
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             this.releaseDate = dateFormat.parse(releaseDateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            this.releaseDate = null;
         } catch (java.text.ParseException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            this.releaseDate = null;  // Set to null if parsing fails
         }
+
+        // Initialize lists to avoid null issues
+        this.seats = new ArrayList<>();
+        this.actorIds = new ArrayList<>();
+        this.categories = new ArrayList<>();
     }
 
-    public Movie(String title, String imageUri, String description, Date releaseDate, List<Integer> actorIds, List<String> categories) {
-        this.title = title;
-        this.imageUri = imageUri;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.actorIds = actorIds;
-        this.categories = categories;
-    }
-
-    public Movie(String title, String description, String releaseDate, String imagePath) {
-    }
-    // Getters and Setters
+    // Getters and setters
     public int getId() {
         return id;
     }
@@ -124,5 +111,19 @@ public class Movie {
 
     public void setSeats(List<String> seats) {
         this.seats = seats;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", imageUri='" + imageUri + '\'' +
+                ", description='" + description + '\'' +
+                ", seats=" + seats +
+                ", releaseDate=" + releaseDate +
+                ", actorIds=" + actorIds +
+                ", categories=" + categories +
+                '}';
     }
 }

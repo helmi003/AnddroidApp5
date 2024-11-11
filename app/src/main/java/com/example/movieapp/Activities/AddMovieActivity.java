@@ -3,17 +3,14 @@ package com.example.movieapp.Activities;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.movieapp.AddEpisode;
 import com.example.movieapp.AppDatabase;
 import com.example.movieapp.Models.Movie;
 import com.example.movieapp.R;
@@ -48,23 +45,28 @@ public class AddMovieActivity extends BaseActivity {
         descriptionEditText = findViewById(R.id.descriptionEditText);
         Button selectImageButton = findViewById(R.id.selectImageButton);
         Button addMovieButton = findViewById(R.id.addMovieButton);
+
         selectImageButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, PICK_IMAGE);
         });
+
         releaseDateEditText.setOnClickListener(v -> showDatePickerDialog());
+
         addMovieButton.setOnClickListener(v -> {
             String descriptionText = descriptionEditText.getText().toString().trim();
             String titleText = movieTitleInput.getText().toString().trim();
             String releaseDate = releaseDateEditText.getText().toString();
             String imagePath = movieImageUri != null ? saveImageToInternalStorage(movieImageUri) : "";
-            if(descriptionText.isEmpty()|| titleText.isEmpty() || releaseDate.isEmpty() || imagePath.isEmpty()){
+
+            if (descriptionText.isEmpty() || titleText.isEmpty() || releaseDate.isEmpty() || imagePath.isEmpty()) {
                 Toast.makeText(AddMovieActivity.this, "All fields are required.", Toast.LENGTH_SHORT).show();
                 return;
-            }else{
+            } else {
                 Executor executor = Executors.newSingleThreadExecutor();
                 executor.execute(() -> {
-                    database.movieDao().insertMovie(new Movie(titleText, descriptionText, releaseDate, imagePath));
+                    Movie movie = new Movie(titleText, descriptionText, releaseDate, imagePath);
+                    database.movieDao().insertMovie(movie);
                     runOnUiThread(() -> {
                         Toast.makeText(AddMovieActivity.this, "Movie added successfully", Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);

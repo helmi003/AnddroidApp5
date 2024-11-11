@@ -18,17 +18,36 @@
             android:orientation="vertical">
 
             <!-- Title Section -->
-            <TextView
-                android:id="@+id/titleTextView"
+            <LinearLayout
+                android:id="@+id/linearLayout3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Edit Actor"
-                android:textColor="@color/white"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center" /> <!-- Centered title -->
+                android:background="@color/dark_blue"
+                android:gravity="center_vertical"
+                android:padding="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/backArrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:src="@drawable/baseline_arrow_back_ios_new_24"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:id="@+id/appBarTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Edit actor"
+                    android:textAlignment="center"
+                    android:textColor="@color/yellow"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <!-- Actor Name Input -->
             <EditText

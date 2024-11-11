@@ -1,8 +1,10 @@
 package com.example.movieapp.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ import com.example.movieapp.R;
 import com.example.movieapp.DAO.ActorMovieJoinDao;
 import com.example.movieapp.DAO.MovieCategoryJoinDao;
 import com.example.movieapp.DAO.MovieDao;
+import com.example.movieapp.SeatReservation;
 import com.example.movieapp.adaptater.ActorsListAdapter;
 import com.example.movieapp.adaptater.CategoryListAdapter;
 
@@ -42,13 +45,20 @@ public class DetailActivity extends BaseActivity {
     private MovieDao movieDao;
     private ActorMovieJoinDao actorMovieJoinDao;
     private MovieCategoryJoinDao movieCategoryJoinDao;
+    Button addReservation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_detail);
-        idFilm = getIntent().getIntExtra("id",0);
+        idFilm = getIntent().getIntExtra("id",-1);
+        addReservation = findViewById(R.id.addReservation);
+        addReservation.setOnClickListener(view -> {
+            Intent intent = new Intent(DetailActivity.this, SeatReservation.class);
+            intent.putExtra("movieID", idFilm);
+            startActivity(intent);
+        });
         initView();
         sendRequest();
     }
@@ -64,29 +74,31 @@ public class DetailActivity extends BaseActivity {
         new Thread(() -> {
             // Fetch the movie and its associated data in a background thread
             Movie movie = movieDao.getMovieById(idFilm);
-            Log.d("movie",movie.toString());
-            List<Actor> actors = actorMovieJoinDao.getActorsForMovie(idFilm);
 
-            // Fetch MovieCategoryJoin objects, extract category IDs, and convert them
-            List<MovieCategoryJoin> movieCategoryJoins = movieCategoryJoinDao.getCategoriesForMovie(idFilm);
-            List<MovieCategory> categories = new ArrayList<>();
-            for (MovieCategoryJoin join : movieCategoryJoins) {
-                MovieCategory category = MovieCategory.fromString(join.getCategoryId());
-                if (category != null) {
-                    categories.add(category);
+            // Check if the movie is null and log an error message if it is
+            if (movie != null) {
+                Log.d("movie", movie.toString());
+                List<Actor> actors = actorMovieJoinDao.getActorsForMovie(idFilm);
+
+                // Fetch MovieCategoryJoin objects, extract category IDs, and convert them
+                List<MovieCategoryJoin> movieCategoryJoins = movieCategoryJoinDao.getCategoriesForMovie(idFilm);
+                List<MovieCategory> categories = new ArrayList<>();
+                for (MovieCategoryJoin join : movieCategoryJoins) {
+                    MovieCategory category = MovieCategory.fromString(join.getCategoryId());
+                    if (category != null) {
+                        categories.add(category);
+                    }
                 }
-            }
 
-            // Log sizes to verify data retrieval
-            Log.d("DetailActivity", "Actors size: " + actors.size());
-            Log.d("DetailActivity", "Categories size: " + categories.size());
+                // Log sizes to verify data retrieval
+                Log.d("DetailActivity", "Actors size: " + actors.size());
+                Log.d("DetailActivity", "Categories size: " + categories.size());
 
-            runOnUiThread(() -> {
-                progressBar.setVisibility(View.GONE);
-                scrollView.setVisibility(View.VISIBLE);
+                runOnUiThread(() -> {
+                    progressBar.setVisibility(View.GONE);
+                    scrollView.setVisibility(View.VISIBLE);
 
-                // Display the movie details
-                if (movie != null) {
+                    // Display the movie details
                     displayMovieDetails(movie);
 
                     adapterActorList = new ActorsListAdapter(actors);
@@ -97,12 +109,18 @@ public class DetailActivity extends BaseActivity {
                     adapterCategory = new CategoryListAdapter(categories);
                     recyclerViewCategory.setAdapter(adapterCategory);
                     adapterCategory.notifyDataSetChanged();
-                } else {
+                });
+            } else {
+                Log.e("DetailActivity", "Movie not found with ID: " + idFilm);
+                runOnUiThread(() -> {
+                    progressBar.setVisibility(View.GONE);
+                    scrollView.setVisibility(View.VISIBLE);
                     movieSummaryInfo.setText("Movie not found");
-                }
-            });
+                });
+            }
         }).start();
     }
+
 
     private void displayMovieDetails(Movie movie) {
         titleTxt.setText(movie.getTitle());
