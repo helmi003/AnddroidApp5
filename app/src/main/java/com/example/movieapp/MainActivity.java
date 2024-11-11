@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.view.inputmethod.EditorInfo;
@@ -26,6 +28,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.example.movieapp.Activities.AddMovieActivity;
 import com.example.movieapp.Activities.DetailActivity;
+import com.example.movieapp.Activities.MovieList;
 import com.example.movieapp.Domain.SliderItems;
 import com.example.movieapp.Models.Movie;
 import com.example.movieapp.Models.MovieCategory;
@@ -80,6 +83,25 @@ public class MainActivity extends AppCompatActivity {
         navView = findViewById(R.id.menuIcon);
         profil = findViewById(R.id.profil);
         navigationView = findViewById(R.id.nav_view);
+
+        Menu menu = navigationView.getMenu();
+        MenuItem addMovieItem = menu.findItem(R.id.nav_add_movie);
+        MenuItem addSerieItem = menu.findItem(R.id.nav_series);
+        MenuItem reservationsItem = menu.findItem(R.id.nav_reservations);
+        MenuItem usersItem = menu.findItem(R.id.nav_users);
+
+        if (user.role == Role.ADMIN) {
+            //addMovieItem.setVisible(true);
+            addSerieItem.setVisible(true);
+            reservationsItem.setVisible(true);
+            usersItem.setVisible(true);
+        } else {
+            //addMovieItem.setVisible(false);
+            addSerieItem.setVisible(false);
+            reservationsItem.setVisible(false);
+            usersItem.setVisible(false);
+        }
+
         watchSerie.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this,WatchSeries.class);
             startActivity(intent);
@@ -115,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, MyReservations.class);
                 startActivity(intent);
             } else if (id == R.id.nav_add_movie) {
-                Intent intent = new Intent(MainActivity.this, AddMovieActivity.class);
+                Intent intent = new Intent(MainActivity.this, MovieList.class);
                 startActivity(intent);
             } else if (id == R.id.nav_logout) {
                 auth.getInstance().signOut();
@@ -177,8 +199,6 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 if (movies != null && !movies.isEmpty()) {
                     setupBestMoviesRecyclerView(movies);
-                } else {
-                    // Handle case when there are no movies in the database
                 }
                 loading1.setVisibility(View.GONE);
             });

@@ -10,7 +10,10 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.movieapp.AddEpisode;
 import com.example.movieapp.AppDatabase;
 import com.example.movieapp.Models.Movie;
 import com.example.movieapp.R;
@@ -19,41 +22,57 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class AddMovieActivity extends BaseActivity {
     private static final int PICK_IMAGE = 1;
-
     private ImageView movieImageViewDisplay;
     private EditText releaseDateEditText;
     private Uri movieImageUri;
-    private AppDatabase db;
+    private AppDatabase database;
+    EditText movieTitleInput;
+    EditText descriptionEditText;
     ImageView backArrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_movie);
-
-        // Initialize database instance
-        db = AppDatabase.getInstance(this);
+        database = AppDatabase.getInstance(this);
         backArrow = findViewById(R.id.backArrow);
         backArrow.setOnClickListener(view -> finish());
         movieImageViewDisplay = findViewById(R.id.movieImageViewDisplay);
         releaseDateEditText = findViewById(R.id.releaseDateEditText);
+        movieTitleInput = findViewById(R.id.movieTitleInput);
+        descriptionEditText = findViewById(R.id.descriptionEditText);
         Button selectImageButton = findViewById(R.id.selectImageButton);
         Button addMovieButton = findViewById(R.id.addMovieButton);
-
-        // Set up image selection button
         selectImageButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, PICK_IMAGE);
         });
-
-        // Set up date picker for release date
         releaseDateEditText.setOnClickListener(v -> showDatePickerDialog());
-
-        // Set up button to save a new movie
-        addMovieButton.setOnClickListener(v -> saveMovie());
+        addMovieButton.setOnClickListener(v -> {
+            String descriptionText = descriptionEditText.getText().toString().trim();
+            String titleText = movieTitleInput.getText().toString().trim();
+            String releaseDate = releaseDateEditText.getText().toString();
+            String imagePath = movieImageUri != null ? saveImageToInternalStorage(movieImageUri) : "";
+            if(descriptionText.isEmpty()|| titleText.isEmpty() || releaseDate.isEmpty() || imagePath.isEmpty()){
+                Toast.makeText(AddMovieActivity.this, "All fields are required.", Toast.LENGTH_SHORT).show();
+                return;
+            }else{
+                Executor executor = Executors.newSingleThreadExecutor();
+                executor.execute(() -> {
+                    database.movieDao().insertMovie(new Movie(titleText, descriptionText, releaseDate, imagePath));
+                    runOnUiThread(() -> {
+                        Toast.makeText(AddMovieActivity.this, "Movie added successfully", Toast.LENGTH_SHORT).show();
+                        setResult(RESULT_OK);
+                        finish();
+                    });
+                });
+            }
+        });
     }
 
     private void showDatePickerDialog() {
@@ -68,27 +87,6 @@ public class AddMovieActivity extends BaseActivity {
                     releaseDateEditText.setText(date);
                 }, year, month, day);
         datePickerDialog.show();
-    }
-
-    private void saveMovie() {
-        String title = ((EditText) findViewById(R.id.movieTitleInput)).getText().toString();
-        String description = ((EditText) findViewById(R.id.descriptionEditText)).getText().toString();
-        String releaseDate = releaseDateEditText.getText().toString();
-        String imagePath = movieImageUri != null ? saveImageToInternalStorage(movieImageUri) : "";
-
-        Movie newMovie = new Movie(title, description, releaseDate, imagePath);
-
-        Log.d("AddMovieActivity", "Attempting to save movie with title: " + title);
-
-        AsyncTask.execute(() -> {
-            long movieId = db.movieDao().insertMovie(newMovie);
-            Log.d("AddMovieActivity", "Saved movie with ID: " + movieId);
-
-            runOnUiThread(() -> {
-                Toast.makeText(AddMovieActivity.this, "Movie added successfully!", Toast.LENGTH_SHORT).show();
-                finish();
-            });
-        });
     }
 
     private String saveImageToInternalStorage(Uri uri) {

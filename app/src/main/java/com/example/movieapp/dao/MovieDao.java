@@ -10,7 +10,7 @@ import java.util.List;
 @Dao
 public interface MovieDao {
     @Insert
-    long insertMovie(Movie movie);
+    void insertMovie(Movie movie);
     @Query("SELECT * FROM movie WHERE title = :title LIMIT 1")
     Movie getMovieByTitle(String title);
     @Query("SELECT * FROM movie")
