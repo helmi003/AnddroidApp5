@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Golden Scene</string>
+    <string name="seat_button_description">Description</string>
+    <string name="back">Retour</string>
+</resources>

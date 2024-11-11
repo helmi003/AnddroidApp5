@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "149648868047",
+    "firebase_url": "https://react-native-course-71c66-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "react-native-course-71c66",
+    "storage_bucket": "react-native-course-71c66.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:149648868047:android:49c4e0232b311dda962dba",
+        "android_client_info": {
+          "package_name": "com.example.movieapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVYfOCdgDGutvMcXXoGi9BNTm7yv5Xdhg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
