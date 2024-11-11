@@ -48,10 +48,8 @@ public class DetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_detail);
-
         idFilm = getIntent().getIntExtra("id",0);
         initView();
-
         sendRequest();
     }
 
@@ -66,6 +64,7 @@ public class DetailActivity extends BaseActivity {
         new Thread(() -> {
             // Fetch the movie and its associated data in a background thread
             Movie movie = movieDao.getMovieById(idFilm);
+            Log.d("movie",movie.toString());
             List<Actor> actors = actorMovieJoinDao.getActorsForMovie(idFilm);
 
             // Fetch MovieCategoryJoin objects, extract category IDs, and convert them
@@ -108,7 +107,11 @@ public class DetailActivity extends BaseActivity {
     private void displayMovieDetails(Movie movie) {
         titleTxt.setText(movie.getTitle());
         movieRateTxt.setText("null");
-        movieTimeTxt.setText(movie.getReleaseDate().toString());  // Format the date properly if needed
+        if (movie.getReleaseDate() != null) {
+            movieTimeTxt.setText(movie.getReleaseDate().toString());
+        } else {
+            movieTimeTxt.setText("Release date not available");
+        }  // Format the date properly if needed
         movieSummaryInfo.setText(movie.getDescription());
 
         // Use Glide to load the movie image into ImageView

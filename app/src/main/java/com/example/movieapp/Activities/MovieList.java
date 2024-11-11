@@ -10,6 +10,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.movieapp.AddMovieHelmi;
 import com.example.movieapp.AppDatabase;
 import com.example.movieapp.Models.Movie;
 import com.example.movieapp.R;
@@ -43,7 +45,7 @@ public class MovieList extends BaseActivity {
         plus = findViewById(R.id.plus);
         backArrow.setOnClickListener(v -> finish());
         plus.setOnClickListener(v -> {
-            Intent intent = new Intent(MovieList.this,AddMovieActivity.class);
+            Intent intent = new Intent(MovieList.this, AddMovieHelmi.class);
             addMovieLauncher.launch(intent);
         });
         loadMovies();

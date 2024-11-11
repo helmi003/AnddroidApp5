@@ -41,8 +41,8 @@ public class FilmListAdapter extends RecyclerView.Adapter<FilmListAdapter.ViewHo
         RequestOptions requestOptions=new RequestOptions();
         requestOptions=requestOptions.transform(new CenterCrop(),new RoundedCorners(30));
         Glide.with(context)
-                .load(movie.getImageUri() != null ? movie.getImageUri() : R.drawable.ic_placeholder_image)
-                .apply(requestOptions)
+                .load(movie.getImageUri())
+                .placeholder(R.drawable.ic_placeholder_image)
                 .into(holder.pic);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
