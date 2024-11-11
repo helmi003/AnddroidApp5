@@ -1,16 +1,18 @@
 package com.example.movieapp;
 
 import android.content.Intent;
-import android.media.Image;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ProgressBar;
-
-import androidx.activity.EdgeToEdge;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -23,6 +25,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.example.movieapp.Activities.AddMovieActivity;
+import com.example.movieapp.Activities.DetailActivity;
 import com.example.movieapp.Domain.SliderItems;
 import com.example.movieapp.Models.Movie;
 import com.example.movieapp.Models.MovieCategory;
@@ -43,7 +46,11 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    private RecyclerView.Adapter adapterBestMovies,adapterUpComing,adapterCategory;
+    private RecyclerView recyclerViewBestMovies,recyclerViewUpComing,recyclerViewCategory;
+    private ProgressBar loading1,loading2,loading3;
+    private ViewPager2 viewPager2;
+    private Handler slideHandler= new Handler();
     DrawerLayout drawerLayout;
     ImageView navView;
     NavigationView navigationView;
@@ -52,13 +59,8 @@ public class MainActivity extends AppCompatActivity {
     User user;
     ImageView profil;
     ImageView watchSerie;
-    private RecyclerView.Adapter adapterBestMovies,adapterUpComing,adapterCategory;
-    private RecyclerView recyclerViewBestMovies,recyclerViewUpComing,recyclerViewCategory;
     private RequestQueue mRequestQueue;
     private StringRequest mStringRequest,mStringRequest2,mStringRequest3;
-    private ProgressBar loading1,loading2,loading3;
-    private ViewPager2 viewPager2;
-    private Handler slideHandler= new Handler();
     private ApplicationDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,34 +127,67 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+        EditText searchEditText = findViewById(R.id.searchEditText);
+        searchEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                String movieTitle = searchEditText.getText().toString().trim();
+                if (!movieTitle.isEmpty()) {
+                    searchMovieByTitle(movieTitle);
+                } else {
+                    Toast.makeText(this, "Please enter a movie title", Toast.LENGTH_SHORT).show();
+                }
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                return true;
+            }
+            return false;
+        });
     }
-    private void sendRequestBestMovies() {
-        // Start loading indicator
-        loading1.setVisibility(View.VISIBLE);
 
-        // Use a background thread to fetch movies from the database
+    private void searchMovieByTitle(String title) {
         AsyncTask.execute(() -> {
-            // Retrieve all movies from the database
-            List<Movie> movies = database.movieDAO().getAllMovies();
+            Log.d("Movies", "Searching for movie with title: " + title); // Log to ensure search logic is working
+            // Query the movie database
+            Movie movie = AppDatabase.getInstance(this).movieDao().getMovieByTitle(title);
 
-            // Update UI on the main thread after fetching data
+            // Log the result for debugging
+            if (movie != null) {
+                Log.d("Movies", "Movie found: " + movie.getTitle());
+            } else {
+                Log.d("Movies", "No movie found with title: " + title);
+            }
+
+            runOnUiThread(() -> {
+                if (movie != null) {
+                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                    intent.putExtra("id", movie.getId());
+                    startActivity(intent);
+                } else {
+                    // If no movie is found, show a Toast
+                    Toast.makeText(MainActivity.this, "No movie found with that title", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+    }
+
+    private void sendRequestBestMovies() {
+        loading1.setVisibility(View.VISIBLE);
+        AsyncTask.execute(() -> {
+            List<Movie> movies = database.movieDAO().getAllMovies();
             runOnUiThread(() -> {
                 if (movies != null && !movies.isEmpty()) {
                     setupBestMoviesRecyclerView(movies);
                 } else {
                     // Handle case when there are no movies in the database
                 }
-                // Stop loading indicator
                 loading1.setVisibility(View.GONE);
             });
         });
     }
     private void sendRequestCategories() {
-        // Start loading indicator
         loading2.setVisibility(View.VISIBLE);
 
         AsyncTask.execute(() -> {
-            // Retrieve all categories from the MovieCategory enum
             List<MovieCategory> categories = Arrays.asList(MovieCategory.values());
 
             runOnUiThread(() -> {
@@ -168,18 +203,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupCategoryRecyclerView(List<MovieCategory> categories) {
-        // Initialize the adapter with the list of categories
         adapterCategory = new CategoryListAdapter(categories);
 
-        // Set the adapter to the RecyclerView
         recyclerViewCategory.setAdapter(adapterCategory);
     }
 
     private void sendRequestUpComing() {
-        // Start loading indicator
         loading3.setVisibility(View.VISIBLE);
 
-        // Get today's date and set time to 00:00:00 (midnight)
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -188,19 +219,14 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.MILLISECOND, 0);
         Date today = calendar.getTime();
 
-        // Use a background thread to fetch upcoming movies from the database
         AsyncTask.execute(() -> {
-            // Retrieve upcoming movies from the database
             List<Movie> upcomingMovies = database.movieDAO().getUpcomingMovies(today);
-
-            // Update UI on the main thread after fetching data
             runOnUiThread(() -> {
                 if (upcomingMovies != null && !upcomingMovies.isEmpty()) {
                     setupUpcomingMoviesRecyclerView(upcomingMovies);
                 } else {
                     Log.d("Movies", "No upcoming movies found.");
                 }
-                // Stop loading indicator
                 loading3.setVisibility(View.GONE);
             });
         });
@@ -276,6 +302,6 @@ public class MainActivity extends AppCompatActivity {
         loading1=findViewById(R.id.progressBar1);
         loading2=findViewById(R.id.progressBar2);
         loading3=findViewById(R.id.progressBar3);
-
     }
+
 }

@@ -93,6 +93,10 @@
             android:name=".SeatReservation"
             android:exported="false" />
         <activity
+            android:name=".Activities.MovieCategoryActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".Activities.DetailActivity"
             android:exported="false" />
         <activity
@@ -115,10 +119,16 @@
             android:name=".MainActivity"
             android:exported="true" />
         <activity
+            android:name=".Activities.MovieList"
+            android:exported="false" />
+        <activity
             android:name=".Activities.EditActorActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.AddMovieActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.ActorSelectionActivity"
             android:exported="false" />
     </application>
 

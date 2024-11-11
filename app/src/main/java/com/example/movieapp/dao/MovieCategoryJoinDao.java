@@ -20,7 +20,10 @@ public interface MovieCategoryJoinDao {
     @Query("SELECT * FROM movie_category_join WHERE movieId = :movieId")
     List<MovieCategoryJoin> getCategoriesForMovie(int movieId);
 
-    // You can also add a method to map the categoryId to MovieCategory enum if needed
+
+    @Query("SELECT EXISTS(SELECT 1 FROM movie_category_join WHERE movieId = :movieId AND categoryId = :categoryId)")
+    boolean isCategoryAttachedToMovie(int movieId, String categoryId);
+
     default List<MovieCategory> getCategoriesAsEnums(List<MovieCategoryJoin> joins) {
         List<MovieCategory> categories = new ArrayList<>();
         for (MovieCategoryJoin join : joins) {

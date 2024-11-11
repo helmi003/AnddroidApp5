@@ -34,10 +34,10 @@
                     android:src="@drawable/baseline_menu_24"
                     android:layout_marginRight="10dp"/>
                 <EditText
-                    android:id="@+id/editTextText"
+                    android:id="@+id/searchEditText"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-
+                    android:textColor="@color/white"
                     android:background="@drawable/edittext_background"
                     android:drawableStart="@drawable/search"
                     android:drawableEnd="@drawable/microphone"

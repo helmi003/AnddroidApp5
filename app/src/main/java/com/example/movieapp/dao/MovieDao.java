@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @Dao
-public interface MovieDAO {
+public interface MovieDao {
     @Insert
     long insertMovie(Movie movie);
     @Query("SELECT * FROM movie WHERE title = :title LIMIT 1")

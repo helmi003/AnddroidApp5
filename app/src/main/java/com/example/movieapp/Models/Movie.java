@@ -50,6 +50,17 @@ public class Movie {
         }
     }
 
+    public Movie(String title, String imageUri, String description, Date releaseDate, List<Integer> actorIds, List<String> categories) {
+        this.title = title;
+        this.imageUri = imageUri;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.actorIds = actorIds;
+        this.categories = categories;
+    }
+
+    public Movie(String title, String description, String releaseDate, String imagePath) {
+    }
     // Getters and Setters
     public int getId() {
         return id;

@@ -21,7 +21,6 @@ public class ActorsListAdapter extends RecyclerView.Adapter<ActorsListAdapter.Vi
     private List<Actor> actors;
     private Context context;
 
-    // Constructor to accept List<Actor>
     public ActorsListAdapter(List<Actor> actors) {
         this.actors = actors;
     }
@@ -38,13 +37,11 @@ public class ActorsListAdapter extends RecyclerView.Adapter<ActorsListAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Actor actor = actors.get(position);
 
-        // Set actor name (Optional: Add more fields like bio if needed)
         holder.nameTextView.setText(actor.getName());
 
-        // Load the actor's profile image using Glide
         Glide.with(context)
-                .load(actor.getProfileImageUrl()) // Ensure this URL is correct
-                .placeholder(R.drawable.ic_placeholder_image) // Set a placeholder in case the image URL is invalid
+                .load(actor.getProfileImageUrl())
+                .placeholder(R.drawable.ic_placeholder_image)
                 .into(holder.profileImageView);
     }
 

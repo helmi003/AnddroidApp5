@@ -6,9 +6,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
-
 import com.example.movieapp.DAO.EpisodeDAO;
-import com.example.movieapp.DAO.MovieDAO;
+import com.example.movieapp.DAO.MovieDao;
 import com.example.movieapp.DAO.ReservationDAO;
 import com.example.movieapp.DAO.SeasonDAO;
 import com.example.movieapp.DAO.SerieDAO;
@@ -52,7 +51,7 @@ public abstract class ApplicationDatabase extends RoomDatabase {
     public abstract SerieDAO serieDAO();
     public abstract SeasonDAO seasonDAO();
     public abstract EpisodeDAO episodeDAO();
-    public abstract MovieDAO movieDAO();
+    public abstract MovieDao movieDAO();
     public abstract ReservationDAO reservationDAO();
     public abstract ActorDao actorDao();
     public abstract ActorMovieJoinDao actorMovieJoinDao();
