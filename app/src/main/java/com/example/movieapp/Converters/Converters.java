@@ -1,4 +1,4 @@
-package com.example.movieapp.Converters;
+package com.example.movieapp.converters;
 
 import androidx.room.TypeConverter;
 import java.util.Arrays;
