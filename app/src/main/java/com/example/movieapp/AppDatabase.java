@@ -16,10 +16,10 @@ import com.example.movieapp.Models.Actor;
 import com.example.movieapp.Models.Movie;
 import com.example.movieapp.Models.ActorMovieJoin;
 import com.example.movieapp.Models.MovieCategoryJoin;
-import com.example.movieapp.dao.ActorDao;
-import com.example.movieapp.dao.MovieDao;
-import com.example.movieapp.dao.ActorMovieJoinDao;
-import com.example.movieapp.dao.MovieCategoryJoinDao;
+import com.example.movieapp.DAO.ActorDao;
+import com.example.movieapp.DAO.MovieDao;
+import com.example.movieapp.DAO.ActorMovieJoinDao;
+import com.example.movieapp.DAO.MovieCategoryJoinDao;
 
 // Include all your entities here
 @Database(entities = {Actor.class, Movie.class, ActorMovieJoin.class, MovieCategoryJoin.class}, version = 4, exportSchema = false)

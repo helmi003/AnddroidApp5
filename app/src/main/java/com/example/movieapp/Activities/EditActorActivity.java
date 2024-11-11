@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.movieapp.AppDatabase;
 import com.example.movieapp.Models.Actor;
 import com.example.movieapp.R;
-import com.example.movieapp.dao.ActorDao;
+import com.example.movieapp.DAO.ActorDao;
 
 public class EditActorActivity extends AppCompatActivity {
     private EditText editActorName, editActorBio;

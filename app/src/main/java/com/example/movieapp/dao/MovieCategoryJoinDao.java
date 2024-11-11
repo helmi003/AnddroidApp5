@@ -1,4 +1,4 @@
-package com.example.movieapp.dao;
+package com.example.movieapp.DAO;
 
 import androidx.room.Dao;
 import androidx.room.Insert;

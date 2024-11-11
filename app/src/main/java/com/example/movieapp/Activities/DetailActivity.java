@@ -29,9 +29,9 @@ import com.example.movieapp.Models.Movie;
 import com.example.movieapp.Models.MovieCategory;
 import com.example.movieapp.Models.MovieCategoryJoin;
 import com.example.movieapp.R;
-import com.example.movieapp.dao.ActorMovieJoinDao;
-import com.example.movieapp.dao.MovieCategoryJoinDao;
-import com.example.movieapp.dao.MovieDao;
+import com.example.movieapp.DAO.ActorMovieJoinDao;
+import com.example.movieapp.DAO.MovieCategoryJoinDao;
+import com.example.movieapp.DAO.MovieDao;
 
 import java.util.ArrayList;
 import java.util.List;
