@@ -63,50 +63,52 @@ public class DetailActivity extends BaseActivity {
     }
 
     private void sendRequest() {
-        mRequestQueue= Volley.newRequestQueue(this);
+        mRequestQueue = Volley.newRequestQueue(this);
         progressBar.setVisibility(View.VISIBLE);
         scrollView.setVisibility(View.GONE);
         movieDao = AppDatabase.getInstance(this).movieDao();
         actorMovieJoinDao = AppDatabase.getInstance(this).actorMovieJoinDao();
         movieCategoryJoinDao = AppDatabase.getInstance(this).movieCategoryJoinDao();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Fetch the movie from the database in a background thread
-                Movie movie = movieDao.getMovieById(idFilm);
-                List<Actor> actors = actorMovieJoinDao.getActorsForMovie(idFilm);
-                List<MovieCategoryJoin> movieCategoryJoins = movieCategoryJoinDao.getCategoriesForMovie(idFilm);
-                List<MovieCategory> categories = movieCategoryJoinDao.getCategoriesAsEnums(movieCategoryJoins);
+        new Thread(() -> {
+            // Fetch the movie and its associated data in a background thread
+            Movie movie = movieDao.getMovieById(idFilm);
+            List<Actor> actors = actorMovieJoinDao.getActorsForMovie(idFilm);
 
-// Log the size of the lists to check if they are populated
-                Log.d("DetailActivity", "Actors size: " + actors.size());
-                Log.d("DetailActivity", "Categories size: " + categories.size());
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.setVisibility(View.GONE);
-                        scrollView.setVisibility(View.VISIBLE);
-                        recyclerViewCategory.setVisibility(View.VISIBLE);
-
-                        // Display the movie details
-                        if (movie != null) {
-                            displayMovieDetails(movie);
-
-                            // Display the actors in the recycler view
-                            adapterActorList = new ActorsListAdapter(actors);
-                            recyclerViewActors.setAdapter(adapterActorList);
-
-                            // Display the categories in the recycler view
-                            adapterCategory = new CategoryListAdapter(categories);
-                            recyclerViewCategory.setAdapter(adapterCategory);
-                        } else {
-                            movieSummaryInfo.setText("Movie not found");
-                        }
-                    }
-                });
+            // Fetch MovieCategoryJoin objects, extract category IDs, and convert them
+            List<MovieCategoryJoin> movieCategoryJoins = movieCategoryJoinDao.getCategoriesForMovie(idFilm);
+            List<MovieCategory> categories = new ArrayList<>();
+            for (MovieCategoryJoin join : movieCategoryJoins) {
+                MovieCategory category = MovieCategory.fromString(join.getCategoryId());
+                if (category != null) {
+                    categories.add(category);
+                }
             }
+
+            // Log sizes to verify data retrieval
+            Log.d("DetailActivity", "Actors size: " + actors.size());
+            Log.d("DetailActivity", "Categories size: " + categories.size());
+
+            runOnUiThread(() -> {
+                progressBar.setVisibility(View.GONE);
+                scrollView.setVisibility(View.VISIBLE);
+
+                // Display the movie details
+                if (movie != null) {
+                    displayMovieDetails(movie);
+
+                    adapterActorList = new ActorsListAdapter(actors);
+                    recyclerViewActors.setAdapter(adapterActorList);
+                    adapterActorList.notifyDataSetChanged();
+
+                    // Set up the category adapter with the list of MovieCategory enums
+                    adapterCategory = new CategoryListAdapter(categories);
+                    recyclerViewCategory.setAdapter(adapterCategory);
+                    adapterCategory.notifyDataSetChanged();
+                } else {
+                    movieSummaryInfo.setText("Movie not found");
+                }
+            });
         }).start();
     }
 

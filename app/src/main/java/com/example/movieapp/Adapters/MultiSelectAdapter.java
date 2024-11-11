@@ -48,12 +48,15 @@ public class MultiSelectAdapter<T> extends RecyclerView.Adapter<MultiSelectAdapt
         holder.itemView.setOnClickListener(v -> {
             if (selectedItems.contains(item)) {
                 selectedItems.remove(item);
+                Log.d("MultiSelectAdapter", "Deselected item: " + itemCallback.getDisplayName(item));
             } else {
                 selectedItems.add(item);
+                Log.d("MultiSelectAdapter", "Selected item: " + itemCallback.getDisplayName(item));
             }
             holder.checkBox.setChecked(selectedItems.contains(item)); // Update checkbox state
-            Log.d("MultiSelectAdapter", "Selected Items: " + selectedItems);
+            Log.d("MultiSelectAdapter", "Currently selected items: " + selectedItems);
         });
+
 
     }
 

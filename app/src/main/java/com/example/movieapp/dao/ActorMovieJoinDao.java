@@ -14,7 +14,8 @@ import java.util.List;
 public interface ActorMovieJoinDao {
     @Insert
     void insert(ActorMovieJoin actorMovieJoin);
-
+    @Query("SELECT EXISTS(SELECT 1 FROM actor_movie_join WHERE movieId = :movieId AND actorId = :actorId)")
+    boolean isActorAttachedToMovie(int movieId, int actorId);
     @Query("SELECT * FROM actor_movie_join WHERE movieId = :movieId")
     List<ActorMovieJoin> getActorsForMovieOld(int movieId);
     @Transaction

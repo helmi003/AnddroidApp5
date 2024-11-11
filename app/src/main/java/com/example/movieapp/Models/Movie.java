@@ -59,6 +59,9 @@ public class Movie {
         this.categories = categories;
     }
 
+    public Movie(String title, String description, String releaseDate, String imagePath) {
+    }
+
     // Getters and Setters
     public int getId() {
         return id;

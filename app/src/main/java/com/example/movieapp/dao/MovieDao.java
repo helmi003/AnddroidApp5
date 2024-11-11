@@ -12,7 +12,8 @@ import java.util.List;
 public interface MovieDao {
     @Insert
     long insertMovie(Movie movie);
-
+    @Query("SELECT * FROM movies WHERE title = :title LIMIT 1")
+    Movie getMovieByTitle(String title);
     @Query("SELECT * FROM movies")
     List<Movie> getAllMovies();
 

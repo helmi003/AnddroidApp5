@@ -25,7 +25,6 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
     private Context context;
     private OnItemClickListener listener; // Add a listener for item clicks
 
-    // Add an interface for item clicks
     public interface OnItemClickListener {
         void onEditClick(Actor actor);
         void onDeleteClick(Actor actor);
@@ -56,10 +55,8 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
             holder.actorProfileImage.setImageResource(R.drawable.ic_placeholder_image);
         }
 
-        // Handle edit button click
         holder.editButton.setOnClickListener(v -> listener.onEditClick(actor));
 
-        // Handle delete button click
         holder.deleteButton.setOnClickListener(v  -> listener.onDeleteClick(actor));
     }
 
@@ -78,8 +75,8 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
             actorName = itemView.findViewById(R.id.actorName);
             actorBio = itemView.findViewById(R.id.actorBio);
             actorProfileImage = itemView.findViewById(R.id.actorProfileImage);
-            editButton = itemView.findViewById(R.id.editButton); // Add this line for edit button
-            deleteButton = itemView.findViewById(R.id.deleteButton); // Add this line for delete button
+            editButton = itemView.findViewById(R.id.editButton);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
         }
     }
 }

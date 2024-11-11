@@ -20,10 +20,12 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/editTextText"
+                android:id="@+id/searchEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_margin="16dp"
+                android:imeOptions="actionSearch"
+                android:textColor="@color/white"
                 android:background="@drawable/edittext_background"
                 android:drawableStart="@drawable/search"
                 android:drawableEnd="@drawable/microphone"

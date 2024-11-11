@@ -11,43 +11,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.movieapp.Adapters.MultiSelectAdapter;
 import com.example.movieapp.AppDatabase;
-import com.example.movieapp.Models.Actor;
 import com.example.movieapp.Models.Movie;
-import com.example.movieapp.Models.MovieCategory;
 import com.example.movieapp.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class AddMovieActivity extends BaseActivity {
     private static final int PICK_IMAGE = 1;
 
     private ImageView movieImageViewDisplay;
     private EditText releaseDateEditText;
-    private RecyclerView actorsRecyclerView;
-    private RecyclerView categoriesRecyclerView;
-    private MultiSelectAdapter<Actor> actorAdapter;
-    private MultiSelectAdapter<MovieCategory> categoryAdapter;
-
-    private List<Actor> actorList = new ArrayList<>();
-    private List<Actor> selectedActors = new ArrayList<>();
-    private List<MovieCategory> categoryList = Arrays.asList(MovieCategory.values());
-    private List<MovieCategory> selectedCategories = new ArrayList<>();
     private Uri movieImageUri;
     private AppDatabase db;
 
@@ -64,25 +41,6 @@ public class AddMovieActivity extends BaseActivity {
         releaseDateEditText = findViewById(R.id.releaseDateEditText);
         Button selectImageButton = findViewById(R.id.selectImageButton);
         Button addMovieButton = findViewById(R.id.addMovieButton);
-        actorsRecyclerView = findViewById(R.id.actorsRecyclerView);
-        categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView);
-
-        // Set up RecyclerViews with LayoutManagers
-        actorsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        Set<Actor> selectedActors = new HashSet<>(); // For actors
-        Set<MovieCategory> selectedCategories = new HashSet<>(); // For categories
-
-        // Set up actor and category adapters
-        actorAdapter = new MultiSelectAdapter<>(actorList, Actor::getName);
-        actorsRecyclerView.setAdapter(actorAdapter);
-
-        categoryAdapter = new MultiSelectAdapter<>(categoryList, MovieCategory::name);
-        categoriesRecyclerView.setAdapter(categoryAdapter);
-
-        // Load actors from database
-        loadActorsFromDatabase();
 
         // Set up image selection button
         selectImageButton.setOnClickListener(v -> {
@@ -92,6 +50,7 @@ public class AddMovieActivity extends BaseActivity {
 
         // Set up date picker for release date
         releaseDateEditText.setOnClickListener(v -> showDatePickerDialog());
+
         // Set up button to save a new movie
         addMovieButton.setOnClickListener(v -> saveMovie());
     }
@@ -110,61 +69,19 @@ public class AddMovieActivity extends BaseActivity {
         datePickerDialog.show();
     }
 
-    private void loadActorsFromDatabase() {
-        AsyncTask.execute(() -> {
-            actorList.clear();
-
-            List<Actor> actors = db.actorDao().getAllActors();
-            actorList.addAll(actors);
-
-            // Log for debugging
-            Log.d("AddMovieActivity", "Loaded actors: " + actors.size());
-
-            runOnUiThread(() -> actorAdapter.notifyDataSetChanged());
-        });
-    }
-
-
     private void saveMovie() {
-        // Log selected items from actor adapter
-
-        Log.d("AddMovieActivity", "Selected Actors: " + actorAdapter.getSelectedItems());
-
-        // Log selected items from category adapter
-        Log.d("AddMovieActivity", "Selected Categories: " + categoryAdapter.getSelectedItems());
-
         String title = ((EditText) findViewById(R.id.movieTitleInput)).getText().toString();
         String description = ((EditText) findViewById(R.id.descriptionEditText)).getText().toString();
         String releaseDate = releaseDateEditText.getText().toString();
         String imagePath = movieImageUri != null ? saveImageToInternalStorage(movieImageUri) : "";
 
-        // Get selected actor IDs from the actor adapter
-        List<Integer> actorIds = new ArrayList<>();
-        for (Actor actor : actorAdapter.getSelectedItems()) {
-            actorIds.add(actor.getId());
-        }
+        Movie newMovie = new Movie(title, description, releaseDate, imagePath);
 
-        // Get selected categories from the category adapter
-        List<String> categories = new ArrayList<>();
-        for (MovieCategory category : categoryAdapter.getSelectedItems()) {
-            categories.add(category.name());
-        }
+        Log.d("AddMovieActivity", "Attempting to save movie with title: " + title);
 
-        // Create a new movie instance with categories
-        Movie newMovie = new Movie(title, description, releaseDate, imagePath, actorIds, categories);
-
-        // Save the movie in the database
         AsyncTask.execute(() -> {
-            db.movieDao().insertMovie(newMovie);
-
-            // Log the movie details after saving
-            Log.d("AddMovieActivity", "Movie added: ");
-            Log.d("AddMovieActivity", "Title: " + newMovie.getTitle());
-            Log.d("AddMovieActivity", "Description: " + newMovie.getDescription());
-            Log.d("AddMovieActivity", "Release Date: " + newMovie.getReleaseDate());
-            Log.d("AddMovieActivity", "Image Path: " + newMovie.getImageUri());
-            Log.d("AddMovieActivity", "Actor IDs: " + actorIds.toString());
-            Log.d("AddMovieActivity", "Categories: " + categories.toString());
+            long movieId = db.movieDao().insertMovie(newMovie);
+            Log.d("AddMovieActivity", "Saved movie with ID: " + movieId);
 
             runOnUiThread(() -> {
                 Toast.makeText(AddMovieActivity.this, "Movie added successfully!", Toast.LENGTH_SHORT).show();
@@ -172,6 +89,7 @@ public class AddMovieActivity extends BaseActivity {
             });
         });
     }
+
     private String saveImageToInternalStorage(Uri uri) {
         try {
             InputStream inputStream = getContentResolver().openInputStream(uri);
