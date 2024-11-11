@@ -45,6 +45,8 @@ dependencies {
     implementation(libs.room.common)
     implementation(libs.firebase.database)
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation(libs.firebase.functions)
+    implementation(libs.firebase.messaging)
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("androidx.media3:media3-exoplayer:1.4.1")

@@ -24,9 +24,9 @@ public class User implements Serializable {
     @ColumnInfo(name = "is_blocked")
     public boolean isBlocked = false;
     @ColumnInfo(name = "is_verified")
-    public boolean isVerified = false;
+    public String image;
 
-    public User(@NonNull String id, String username, Long phone, String email, Role role, String password, boolean isBlocked, boolean isVerified) {
+    public User(@NonNull String id, String username, Long phone, String email, Role role, String password, boolean isBlocked, String image) {
         this.id = id;
         this.username = username;
         this.phone = phone;
@@ -34,7 +34,7 @@ public class User implements Serializable {
         this.role = role;
         this.password = password;
         this.isBlocked = isBlocked;
-        this.isVerified = isVerified;
+        this.image = image;
     }
 
     @NonNull
@@ -94,12 +94,12 @@ public class User implements Serializable {
         isBlocked = blocked;
     }
 
-    public boolean isVerified() {
-        return isVerified;
+    public String getImage() {
+        return image;
     }
 
-    public void setVerified(boolean verified) {
-        isVerified = verified;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class User implements Serializable {
                 ", role=" + role +
                 ", password='" + password + '\'' +
                 ", isBlocked=" + isBlocked +
-                ", isVerified=" + isVerified +
+                ", image='" + image + '\'' +
                 '}';
     }
 }

@@ -1,5 +1,7 @@
 package com.example.movieapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,29 +34,29 @@ public class Support extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private FirebaseAuth auth;
-    FirebaseUser currentUser;
-    private String chatId;
+    private FirebaseUser currentUser;
     private ChatAdapter chatAdapter;
     private RecyclerView recyclerViewChat;
-    ImageView backArrow;
-    ImageButton send;
-    EditText editTextMessage;
+    private ImageView backArrow;
+    private ImageButton send;
+    private EditText editTextMessage;
     private ApplicationDatabase database;
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_support);
-
+        userID = getIntent().getStringExtra("userID");
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
-        checkOrCreateChat(currentUser.getUid());
+        database = ApplicationDatabase.getAppDatabase(this);
 
+        // Initialize UI elements
         backArrow = findViewById(R.id.backArrow);
         send = findViewById(R.id.send);
         editTextMessage = findViewById(R.id.editTextMessage);
-        database = ApplicationDatabase.getAppDatabase(this);
         recyclerViewChat = findViewById(R.id.recyclerViewChat);
         recyclerViewChat.setLayoutManager(new LinearLayoutManager(this));
 
@@ -62,8 +64,8 @@ public class Support extends AppCompatActivity {
         chatAdapter = new ChatAdapter(new ArrayList<>());
         recyclerViewChat.setAdapter(chatAdapter);
 
+        // Set click listeners
         backArrow.setOnClickListener(v -> finish());
-
         send.setOnClickListener(view -> {
             String message = editTextMessage.getText().toString();
             if (message.isEmpty()) {
@@ -73,39 +75,14 @@ public class Support extends AppCompatActivity {
                 editTextMessage.setText(""); // Clear the input field
             }
         });
-    }
 
-    private void checkOrCreateChat(String userId) {
-        CollectionReference chatsCollection = db.collection("chats");
-        chatsCollection.whereEqualTo("userId", userId)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                        chatId = document.getId();
-                        loadMessages();
-                    } else {
-                        createNewChat(userId);
-                    }
-                });
-    }
-
-    private void createNewChat(String userId) {
-        Map<String, Object> chatData = new HashMap<>();
-        chatData.put("userId", userId);
-        chatData.put("createdTimestamp", FieldValue.serverTimestamp());
-
-        db.collection("chats")
-                .add(chatData)
-                .addOnSuccessListener(documentReference -> {
-                    chatId = documentReference.getId();
-                    loadMessages();
-                })
-                .addOnFailureListener(e -> Log.w("Chat", "Error creating chat", e));
+        // Load messages for the current user's chat
+        loadMessages();
     }
 
     private void loadMessages() {
-        db.collection("chats").document(chatId).collection("messages")
+        String userId = (userID != null && !userID.isEmpty()) ? userID : currentUser.getUid();
+        db.collection("chats").document(userId).collection("messages")
                 .orderBy("timestamp", Query.Direction.ASCENDING)
                 .addSnapshotListener((snapshots, e) -> {
                     if (e != null) {
@@ -122,36 +99,24 @@ public class Support extends AppCompatActivity {
                             Log.w("Chat", "Null message or missing text field in Firestore document.");
                         }
                     }
-                    if (messages.isEmpty()) {
-                        findViewById(R.id.emptyStateView).setVisibility(View.VISIBLE);
-                    } else {
-                        findViewById(R.id.emptyStateView).setVisibility(View.GONE);
-                        chatAdapter.updateMessages(messages);
-                    }
+                    findViewById(R.id.emptyStateView).setVisibility(messages.isEmpty() ? View.VISIBLE : View.GONE);
+                    chatAdapter.updateMessages(messages);
                     Log.d("messages", messages.toString());
                 });
     }
 
-
     private void sendMessage(String text) {
-        if (chatId == null) {
-            Toast.makeText(this, "Chat ID is not initialized. Please try again.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
+        String userId = (userID != null && !userID.isEmpty()) ? userID : currentUser.getUid();
         User user = database.userDAO().getUserById(currentUser.getUid());
         String role = user.role == Role.ADMIN ? "admin" : "user";
-
         Map<String, Object> message = new HashMap<>();
         message.put("senderId", currentUser.getUid());
         message.put("message", text);
         message.put("timestamp", FieldValue.serverTimestamp());
         message.put("role", role);
-
-        db.collection("chats").document(chatId).collection("messages")
+        db.collection("chats").document(userId).collection("messages")
                 .add(message)
                 .addOnSuccessListener(documentReference -> Log.d("Chat", "Message sent"))
                 .addOnFailureListener(e -> Log.w("Chat", "Error sending message", e));
     }
-
 }

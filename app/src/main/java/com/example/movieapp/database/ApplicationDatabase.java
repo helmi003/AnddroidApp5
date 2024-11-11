@@ -40,7 +40,7 @@ import com.example.movieapp.entities.User;
                 ActorMovieJoin.class,
                 MovieCategoryJoin.class
         },
-        version = 6,
+        version = 7,
         exportSchema = false
 )
 @TypeConverters({Converters.class, MovieCategoryConverter.class})

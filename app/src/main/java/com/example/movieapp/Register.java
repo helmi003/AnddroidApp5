@@ -142,7 +142,7 @@ public class Register extends AppCompatActivity {
                                 FirebaseUser user = task.getResult().getUser();
                                 String userId = user.getUid();
 
-                                database.userDAO().createUser(new User(userId,usernameText,Long.parseLong(phoneText),emailText, role,passwordText,false,false));
+                                database.userDAO().createUser(new User(userId,usernameText,Long.parseLong(phoneText),emailText, role,passwordText,false,""));
                                 Toast.makeText(Register.this, "Authentication success.",
                                         Toast.LENGTH_SHORT).show();
                                 user.sendEmailVerification()

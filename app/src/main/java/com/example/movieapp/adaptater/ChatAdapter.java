@@ -8,12 +8,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.movieapp.R;
 import com.example.movieapp.entities.Message;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_USER = 1;
     private static final int VIEW_TYPE_ADMIN = 2;
+    FirebaseUser currentUser;
+    FirebaseAuth auth;
     private List<Message> messages;
 
     public ChatAdapter(List<Message> messages) {
@@ -22,8 +26,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
+        auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
         Message message = messages.get(position);
-        return message.getRole().equals("user") ? VIEW_TYPE_USER : VIEW_TYPE_ADMIN;
+        return currentUser.getUid().equals(message.getSenderId()) ? VIEW_TYPE_ADMIN : VIEW_TYPE_USER;
     }
 
     public void updateMessages(List<Message> newMessages) {
@@ -49,10 +55,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Message message = messages.get(position);
         if (holder instanceof UserMessageViewHolder) {
             ((UserMessageViewHolder) holder).bind(message);
-        } else {
+        } else if (holder instanceof AdminMessageViewHolder) {
             ((AdminMessageViewHolder) holder).bind(message);
         }
     }
+
 
     @Override
     public int getItemCount() {

@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.Glide;
 import com.example.movieapp.database.ApplicationDatabase;
 import com.example.movieapp.entities.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,6 +26,7 @@ public class Profil extends AppCompatActivity {
     FirebaseAuth auth;
     User user;
     ImageView backArrow;
+    ImageView userImage;
     Button modify;
     private ApplicationDatabase database;
 
@@ -44,6 +47,7 @@ public class Profil extends AppCompatActivity {
         currentUser = auth.getCurrentUser();
         database = ApplicationDatabase.getAppDatabase(this);
         email = findViewById(R.id.email);
+        userImage = findViewById(R.id.userImage);
         username = findViewById(R.id.username);
         phone = findViewById(R.id.phone);
         backArrow = findViewById(R.id.backArrow);
@@ -66,6 +70,9 @@ public class Profil extends AppCompatActivity {
                 username.setText(user.getUsername());
                 phone.setText(user.getPhone().toString());
                 email.setText(user.getEmail());
+                if(!user.getImage().isEmpty()){
+                    Glide.with(this).load(user.getImage()).into(userImage);
+                }
             } else {
                 Log.d("Profil", "User data not found in local database");
                 // You can handle this case, e.g., show a default message or fetch user data from Firebase

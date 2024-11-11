@@ -1,17 +1,19 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:gravity="end"
+    android:gravity="start"
+    android:paddingRight="30dp"
     android:padding="8dp">
 
-    <TextView
-        android:id="@+id/textMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_seatdetail"
-        android:padding="10dp"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/textMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_user_message"
+            android:padding="10dp"
+            android:textAlignment="textEnd"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
