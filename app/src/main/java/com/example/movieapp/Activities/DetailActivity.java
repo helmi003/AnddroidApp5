@@ -16,72 +16,74 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.example.movieapp.AppDatabase;
 import com.example.movieapp.Models.Actor;
 import com.example.movieapp.Models.Movie;
 import com.example.movieapp.Models.MovieCategory;
 import com.example.movieapp.Models.MovieCategoryJoin;
 import com.example.movieapp.R;
-import com.example.movieapp.DAO.ActorMovieJoinDao;
-import com.example.movieapp.DAO.MovieCategoryJoinDao;
-import com.example.movieapp.DAO.MovieDao;
 import com.example.movieapp.SeatReservation;
+import com.example.movieapp.database.ApplicationDatabase;
 import com.example.movieapp.adaptater.ActorsListAdapter;
 import com.example.movieapp.adaptater.CategoryListAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class DetailActivity extends BaseActivity {
     private RequestQueue mRequestQueue;
     private StringRequest mStringRequest;
     private ProgressBar progressBar;
-    private TextView titleTxt,movieRateTxt,movieTimeTxt,movieSummaryInfo,movieActorsInfo;
+    private TextView titleTxt, movieRateTxt, movieTimeTxt, movieSummaryInfo;
     private int idFilm;
-    private ImageView pic2,backImg;
-    private RecyclerView.Adapter adapterActorList,adapterCategory;
-    private RecyclerView recyclerViewActors,recyclerViewCategory;
-    private NestedScrollView scrollView;
-    private MovieDao movieDao;
-    private ActorMovieJoinDao actorMovieJoinDao;
-    private MovieCategoryJoinDao movieCategoryJoinDao;
-    Button addReservation;
+    private ImageView pic2, backArrow, plus;
+    private RecyclerView.Adapter adapterActorList, adapterCategory;
+    private RecyclerView recyclerViewActors, recyclerViewCategory;
+    private ImageView addReservation;
+    private Movie movie;
+    private ApplicationDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_detail);
-        idFilm = getIntent().getIntExtra("id",-1);
+        idFilm = getIntent().getIntExtra("id", -1);
         addReservation = findViewById(R.id.addReservation);
+        titleTxt = findViewById(R.id.MovieNameTxt);
+        progressBar = findViewById(R.id.progressBarDetail);
+        pic2 = findViewById(R.id.picDetail);
+        movieRateTxt = findViewById(R.id.MovieStar);
+        movieTimeTxt = findViewById(R.id.MovieTime);
+        movieSummaryInfo = findViewById(R.id.MovieSummary);
+        backArrow = findViewById(R.id.backArrow);
+        recyclerViewCategory = findViewById(R.id.categoryView);
+        recyclerViewActors = findViewById(R.id.actorsRecyclerView);
+        recyclerViewCategory.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewActors.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        backArrow.setOnClickListener(v -> finish());
         addReservation.setOnClickListener(view -> {
             Intent intent = new Intent(DetailActivity.this, SeatReservation.class);
             intent.putExtra("movieID", idFilm);
             startActivity(intent);
         });
-        initView();
+        database = ApplicationDatabase.getAppDatabase(this);
         sendRequest();
     }
 
     private void sendRequest() {
         mRequestQueue = Volley.newRequestQueue(this);
         progressBar.setVisibility(View.VISIBLE);
-        scrollView.setVisibility(View.GONE);
-        movieDao = AppDatabase.getInstance(this).movieDao();
-        actorMovieJoinDao = AppDatabase.getInstance(this).actorMovieJoinDao();
-        movieCategoryJoinDao = AppDatabase.getInstance(this).movieCategoryJoinDao();
 
         new Thread(() -> {
-            // Fetch the movie and its associated data in a background thread
-            Movie movie = movieDao.getMovieById(idFilm);
+            movie = database.movieDAO().getMovieById(idFilm);
 
-            // Check if the movie is null and log an error message if it is
             if (movie != null) {
                 Log.d("movie", movie.toString());
-                List<Actor> actors = actorMovieJoinDao.getActorsForMovie(idFilm);
+                List<Actor> actors = database.actorMovieJoinDao().getActorsForMovie(idFilm);
+                List<MovieCategoryJoin> movieCategoryJoins = database.movieCategoryJoinDao().getCategoriesForMovie(idFilm);
 
-                // Fetch MovieCategoryJoin objects, extract category IDs, and convert them
-                List<MovieCategoryJoin> movieCategoryJoins = movieCategoryJoinDao.getCategoriesForMovie(idFilm);
                 List<MovieCategory> categories = new ArrayList<>();
                 for (MovieCategoryJoin join : movieCategoryJoins) {
                     MovieCategory category = MovieCategory.fromString(join.getCategoryId());
@@ -90,22 +92,14 @@ public class DetailActivity extends BaseActivity {
                     }
                 }
 
-                // Log sizes to verify data retrieval
-                Log.d("DetailActivity", "Actors size: " + actors.size());
-                Log.d("DetailActivity", "Categories size: " + categories.size());
-
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
-                    scrollView.setVisibility(View.VISIBLE);
-
-                    // Display the movie details
                     displayMovieDetails(movie);
 
                     adapterActorList = new ActorsListAdapter(actors);
                     recyclerViewActors.setAdapter(adapterActorList);
                     adapterActorList.notifyDataSetChanged();
 
-                    // Set up the category adapter with the list of MovieCategory enums
                     adapterCategory = new CategoryListAdapter(categories);
                     recyclerViewCategory.setAdapter(adapterCategory);
                     adapterCategory.notifyDataSetChanged();
@@ -114,44 +108,18 @@ public class DetailActivity extends BaseActivity {
                 Log.e("DetailActivity", "Movie not found with ID: " + idFilm);
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
-                    scrollView.setVisibility(View.VISIBLE);
                     movieSummaryInfo.setText("Movie not found");
                 });
             }
         }).start();
     }
 
-
     private void displayMovieDetails(Movie movie) {
         titleTxt.setText(movie.getTitle());
-        movieRateTxt.setText("null");
-        if (movie.getReleaseDate() != null) {
-            movieTimeTxt.setText(movie.getReleaseDate().toString());
-        } else {
-            movieTimeTxt.setText("Release date not available");
-        }  // Format the date properly if needed
+        movieRateTxt.setText("N/A");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+        movieTimeTxt.setText(movie.getReleaseDate() != null ? dateFormat.format(movie.getReleaseDate()) : "--");
         movieSummaryInfo.setText(movie.getDescription());
-
-        // Use Glide to load the movie image into ImageView
         Glide.with(this).load(movie.getImageUri()).into(pic2);
-    }
-    private void initView() {
-        titleTxt=findViewById(R.id.MovieNameTxt);
-        progressBar=findViewById(R.id.progressBarDetail);
-        scrollView=findViewById(R.id.scrollView2);
-        pic2=findViewById(R.id.picDetail);
-        movieRateTxt=findViewById(R.id.MovieStar);
-        movieTimeTxt=findViewById(R.id.MovieTime);
-        movieSummaryInfo=findViewById(R.id.MovieSummary);
-        movieActorsInfo=findViewById(R.id.movieActorInfo);
-        backImg=findViewById(R.id.backImg);
-        recyclerViewCategory=findViewById(R.id.categoryView);
-        recyclerViewActors=findViewById(R.id.actorsView);
-        recyclerViewCategory.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-        recyclerViewActors.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-
-        backImg.setOnClickListener(v -> finish());
-
-
     }
 }
