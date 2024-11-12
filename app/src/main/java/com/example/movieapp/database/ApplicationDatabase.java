@@ -7,6 +7,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import com.example.movieapp.DAO.EpisodeDAO;
+import com.example.movieapp.DAO.Feedback;
+import com.example.movieapp.DAO.FeedbackDao;
 import com.example.movieapp.DAO.MovieDao;
 import com.example.movieapp.DAO.ReservationDAO;
 import com.example.movieapp.DAO.SeasonDAO;
@@ -37,9 +39,10 @@ import com.example.movieapp.entities.User;
                 Episode.class,
                 Actor.class,
                 ActorMovieJoin.class,
-                MovieCategoryJoin.class
+                MovieCategoryJoin.class,
+                Feedback.class
         },
-        version = 7,
+        version = 8,
         exportSchema = false
 )
 @TypeConverters({Converters.class, MovieCategoryConverter.class})
@@ -56,6 +59,7 @@ public abstract class ApplicationDatabase extends RoomDatabase {
     public abstract ActorDao actorDao();
     public abstract ActorMovieJoinDao actorMovieJoinDao();
     public abstract MovieCategoryJoinDao movieCategoryJoinDao();
+    public abstract FeedbackDao feedbackDao();
 
     public static ApplicationDatabase getAppDatabase(Context context) {
         if (instance == null) {

@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.movieapp.FeedbackActivity;
 import com.example.movieapp.Models.Actor;
 import com.example.movieapp.Models.Movie;
 import com.example.movieapp.Models.MovieCategory;
@@ -54,7 +55,7 @@ public class DetailActivity extends BaseActivity {
         titleTxt = findViewById(R.id.MovieNameTxt);
         progressBar = findViewById(R.id.progressBarDetail);
         pic2 = findViewById(R.id.picDetail);
-        movieRateTxt = findViewById(R.id.MovieStar);
+        movieRateTxt = findViewById(R.id.movieStar);
         movieTimeTxt = findViewById(R.id.MovieTime);
         movieSummaryInfo = findViewById(R.id.MovieSummary);
         backArrow = findViewById(R.id.backArrow);
@@ -117,6 +118,11 @@ public class DetailActivity extends BaseActivity {
     private void displayMovieDetails(Movie movie) {
         titleTxt.setText(movie.getTitle());
         movieRateTxt.setText("N/A");
+        movieRateTxt.setOnClickListener(view -> {
+            Intent intent = new Intent(DetailActivity.this, FeedbackActivity.class);
+            intent.putExtra("movieId",movie.getId());
+            startActivity(intent);
+        });
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
         movieTimeTxt.setText(movie.getReleaseDate() != null ? dateFormat.format(movie.getReleaseDate()) : "--");
         movieSummaryInfo.setText(movie.getDescription());
